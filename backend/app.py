@@ -106,4 +106,10 @@ def episodes_search():
     return get_sql_recipes()
 
 
-app.run(debug=True)
+@app.route("/recipes")
+def recipe_search():
+    ingredients = request.args.get("ingredients")
+    restrictions = request.args.get("restrictions")
+    category = request.args.get("category")
+    time = request.args.get("time")
+# app.run(debug=True)

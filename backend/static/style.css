@@ -1,4 +1,67 @@
-.full-body-container{
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+body{
+    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(../static/images/fridge.png);
+    background-position: center;
+    background-size: cover;
+}
+
+.container{
+    width: 800px;
+    height: 600px;
+    margin: 8% auto;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+}
+
+h1{
+    text-align: center;
+    margin-bottom: 40px;
+    color: #777;
+}
+
+.container form{
+    width: 700px;
+    position: absolute;
+    top: 100px;
+    left:40px;
+
+}
+
+/* form input{
+    width: 200px;
+    padding: 10px 5px;
+    margin: 5px 0;
+    border: 0;
+    border-bottom: 1px solid #999;
+    outline: none;
+    background: transparent;
+} */
+
+.myDiv {
+    height: 25px;
+    width: 50px;
+    border: 1px solid blue;
+  }
+  #box {
+    width: 700px;
+    height: 700px;
+    border: solid black;
+    position: relative;
+  }
+  .recipe-title{
+    font-family: 'Kanit', sans-serif;
+}
+
+.recipe-desc{
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* .full-body-container{
     position: absolute;
     top:0;
     left:0;
@@ -88,4 +151,4 @@
 
 .episode-desc{
     font-family: 'Montserrat', sans-serif;
-}
+} */

@@ -1,10 +1,163 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<title>Pantry Pal: Recipe Recommendation Engine</title>
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+<link rel="stylesheet" href="/static/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
+
 <body>
+    <div class="container">
+        <form class="ingredient-input" onsubmit="return false">
+            <h1>PANTRY PAL</h1>
+            <label for="ingredients">Ingredients:</label>
+            <input type="text" id="ingredients" name="ingredients" placeholder="Enter Ingredient">
+            <button type="button" id="add">Add</button><br>
+            <p id='output'></p>
+            <label for="dietary-restrictions">Dietary Restrictions:</label><br>
+            <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions1" value="vegetarian">
+            <label for="dietary-restirctions1">Vegetarian</label><br>
+            <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions2" value="vegan">
+            <label for="dietary-restirctions2">Vegan</label><br>
+            <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions3" value="dairy-free">
+            <label for="dietary-restirctions3">Dairy Free</label><br>
+            <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions4" value="gluten-free">
+            <label for="dietary-restirctions4">Gluten Free</label><br>
+            <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions5" value="nut-free">
+            <label for="dietary-restirctions5">Nut Free</label><br>
+            <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions6" value="egg-free">
+            <label for="dietary-restirctions6">Egg Free</label><br>
+            <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions7" value="shellfish-free">
+            <label for="dietary-restirctions7">Shellfish Free</label><br>
+            <label for="category">Category:</label>
+            <select name="category" id="category">
+                <option value="select-category">Select One</option>
+                <option value="main-course">Main Course</option>
+                <option value="dessert">Dessert</option>
+                <option value="appetizer-snacks">Appetizer and Snack</option>
+            </select><br>
+            <label for="time" id="time">Time:</label>
+            <select name="time" id="time">
+                <option value="select-time">Select One</option>
+                <option value="15min">Under 15 minutes</option>
+                <option value="30min">Under 30 minutes</option>
+                <option value="1hr">Under 1 hour</option>
+                <option value="1-2hr">1-2 hours</option>
+                <option value="3hrs">2+ hours</option>
+            </select><br>
+
+            <div class="btn-box">
+
+            </div>
+
+            <input type="reset" id="reset" value="Reset">
+            <input type="submit" id="submit" value="Submit">
+
+
+        </form>
+
+        
+
+        <script>
+            var addIng = document.getElementById("add");
+            var reset = document.getElementById("reset");
+            var submit = document.getElementById("submit");
+            
+            
+            const ingredients = [];
+
+            addIng.addEventListener("click", add);
+            function add() {
+                // var box = document.createElement('div');
+                // box.classList.add('myDiv');
+                // document.getElementById("output").appendChild(box);
+                ingredients.push(document.getElementById("ingredients").value)
+                document.getElementById("output").innerHTML = ingredients;
+                document.getElementById("ingredients").value = "";
+            }
+
+            
+
+            reset.addEventListener("click", clear);
+            function clear() {
+                while(ingredients.length) {ingredients.pop()}
+                document.getElementById("output").innerHTML = "";
+            }
+
+            function answerBoxTemplate(title, titleDesc) {
+            return `<div class=''>
+                <h3 class='recipe-title'>${title}</h3>
+                <p class='recipe-desc'>${titleDesc}</p>
+            </div>`
+            }
+
+            submit.addEventListener("click", filterText);
+            function filterText() {
+                let results = {"ingredients": ingredients, "restrictions": [], "category": [], "time": []};
+                
+                var vegetarian = document.getElementById("dietary-restrictions1");
+                var vegan = document.getElementById("dietary-restrictions2");
+                var dairy = document.getElementById("dietary-restrictions3");
+                var gluten = document.getElementById("dietary-restrictions4");
+                var nuts = document.getElementById("dietary-restrictions5");
+                var egg = document.getElementById("dietary-restrictions6");
+                var shellfish = document.getElementById("dietary-restrictions7");
+                if (vegetarian.checked) {
+                    results["restrictions"].push(vegetarian);
+                }
+                if (vegan.checked) {
+                    results["restrictions"].push(vegan);
+                }
+                if (dairy.checked) {
+                    results["restrictions"].push(dairy);
+                }
+                if (gluten.checked) {
+                    results["restrictions"].push(gluten);
+                }
+                if (nuts.checked) {
+                    results["restrictions"].push(nuts);
+                }
+                if (egg.checked) {
+                    results["restrictions"].push(egg);
+                }
+                if (shellfish.checked) {
+                    results["restrictions"].push(shellfish);
+                }
+                if (document.getElementById("category") != "select-category") {
+                    results["category"].push(document.getElementById("category")).value;
+                }
+                if (document.getElementById("time") != "select-time") {
+                    results["time"].push(document.getElementById("time")).value;
+                }
+                console.log(results)
+                fetch("/recipes?" + new URLSearchParams(results).toString())
+                .then((response) => response.json())
+                .then((data) => data.forEach(row => {
+
+                    let tempDiv = document.createElement("div")
+                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr)
+                    document.getElementById("answer-box").appendChild(tempDiv)
+                }));
+            }
+
+            
+
+
+        </script>
+        
+
+
+
+
+
+
+
+
+    </div>
+</body>
+
+<!-- <body>
     <div class="full-body-container">
         <div class="top-text">
             <div class="google-colors">
@@ -17,7 +170,8 @@
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val"
+                    onkeyup="filterText()">
             </div>
         </div>
         <div id="answer-box">
@@ -27,30 +181,30 @@
 
     <script>
 
-        function answerBoxTemplate(title,titleDesc){
+        function answerBoxTemplate(title, titleDesc) {
             return `<div class=''>
                 <h3 class='episode-title'>${title}</h3>
                 <p class='episode-desc'>${titleDesc}</p>
             </div>`
         }
 
-        function sendFocus(){
+        function sendFocus() {
             document.getElementById('filter-text-val').focus()
         }
 
-        function filterText(){
+        function filterText() {
             document.getElementById("answer-box").innerHTML = ""
             console.log(document.getElementById("filter-text-val").value)
             fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
-            .then((response) => response.json())
-            .then((data) => data.forEach(row => {
-                
-                let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr)
-                document.getElementById("answer-box").appendChild(tempDiv)
-            }));
+                .then((response) => response.json())
+                .then((data) => data.forEach(row => {
+
+                    let tempDiv = document.createElement("div")
+                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr)
+                    document.getElementById("answer-box").appendChild(tempDiv)
+                }));
 
         }
-            
+
     </script>
-</body>
+</body> -->
