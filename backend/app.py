@@ -36,7 +36,13 @@ ii = None
 aii = None
 
 allergies = {"nuts": ["peanut", "peanut oil", "peanuts",
-                      "peanut butter", "walnut", "walnuts"]
+                      "peanut butter", "walnut", "walnuts"],
+             "vegan": ["bacon", "chicken"],
+             "vegetarian": ["bacon", "chicken"],
+             "dairy": ["milk"],
+             "gluten": ["flour", "pasta", "angel hair pasta"],
+             "egg": ["egg", "eggs"],
+             "shellfish": ["shrimp", "crab", "lobster"]
              }
 
 
@@ -174,7 +180,6 @@ def preprocessing(ingredients, restrictions, category, time):
         name = rep[0]
         d = {"title": name, "descr": mapping[name]["ingredients"]}
         output.append(d)
-    print(output)
     return json.dumps(output)
 
 
