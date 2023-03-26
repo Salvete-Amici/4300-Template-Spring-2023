@@ -110,6 +110,7 @@
 
         submit.addEventListener("click", filterText);
         function filterText() {
+            document.getElementById("answer-box").innerHTML = ""
             let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
 
             var vegetarian = document.getElementById("dietary-restrictions1");
