@@ -32,6 +32,15 @@ h1{
 
 }
 
+/* .answer-box{
+    width: 1000px;
+    height: 1000px;
+    margin: 8% auto;
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+} */
+
 /* form input{
     width: 200px;
     padding: 10px 5px;
@@ -55,8 +64,12 @@ h1{
   } */
 
 #answer-box{
-    width: 700px;
-    margin-top:50px; 
+    /* width: 1000px; */
+    margin-top:50px;
+    margin: 8% auto;
+    background: #fff;
+    border-radius: 5px;
+    position: relative; 
 }
 .recipe-title{
     font-family: 'Kanit', sans-serif;
