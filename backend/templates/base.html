@@ -99,6 +99,15 @@
         </div>`
         }
 
+        function getSelectedText(elementId) {
+            var elt = document.getElementById(elementId);
+
+            if (elt.selectedIndex == -1)
+                return null;
+
+            return elt.options[elt.selectedIndex].text;
+        }
+
         submit.addEventListener("click", filterText);
         function filterText() {
             let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
@@ -131,11 +140,11 @@
             if (shellfish.checked) {
                 results["restrictions"].push("shellfish");
             }
-            if (document.getElementById("category") != "select-category") {
-                results["category"].push(document.getElementById("category")).value;
+            if (document.getElementById("category").selectedIndex != 0) {
+                results["category"].push(getSelectedText("category")).value;
             }
-            if (document.getElementById("time") != "select-time") {
-                results["time"].push(document.getElementById("time")).value;
+            if (document.getElementById("time").selectedIndex != 0) {
+                results["time"].push(getSelectedText("time")).value;
             }
             console.log(results)
             fetch("/recipes?" + new URLSearchParams(results).toString())
