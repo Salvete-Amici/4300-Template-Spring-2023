@@ -67,95 +67,100 @@
     </div>
 
     <script>
-        var addIng = document.getElementById("add");
-        var reset = document.getElementById("reset");
-        var submit = document.getElementById("submit");
+        window.onload() = function() {
+
+        
+            var addIng = document.getElementById("add");
+            var reset = document.getElementById("reset");
+            var submit = document.getElementById("submit");
 
 
-        const ingredients = [];
+            const ingredients = [];
 
-        addIng.addEventListener("click", add);
-        function add() {
-            // var box = document.createElement('div');
-            // box.classList.add('myDiv');
-            // document.getElementById("output").appendChild(box);
-            ingredients.push(document.getElementById("ingredients").value)
-            document.getElementById("output").innerHTML = ingredients;
-            document.getElementById("ingredients").value = "";
-        }
-
-
-
-        reset.addEventListener("click", clear);
-        function clear() {
-            while (ingredients.length) { ingredients.pop() }
-            document.getElementById("output").innerHTML = "";
-        }
-
-        function answerBoxTemplate(title, titleDesc) {
-            return `<div class=''>
-                <h3 class='recipe-title'>${title}</h3>
-                <p class='recipe-desc'>${titleDesc}</p>
-            </div>`
-        }
-
-        function getSelectedText(elementId) {
-            var elt = document.getElementById(elementId);
-
-            if (elt.selectedIndex == -1)
-                return null;
-
-            return elt.options[elt.selectedIndex].text;
-        }
-
-        submit.addEventListener("click", filterText);
-        function filterText() {
-            document.getElementById("answer-box").innerHTML = ""
-            let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
-
-            var vegetarian = document.getElementById("dietary-restrictions1");
-            var vegan = document.getElementById("dietary-restrictions2");
-            var dairy = document.getElementById("dietary-restrictions3");
-            var gluten = document.getElementById("dietary-restrictions4");
-            var nuts = document.getElementById("dietary-restrictions5");
-            var egg = document.getElementById("dietary-restrictions6");
-            var shellfish = document.getElementById("dietary-restrictions7");
-            if (vegetarian.checked) {
-                results["restrictions"].push("vegetarian");
+            addIng.addEventListener("click", add);
+            function add() {
+                // var box = document.createElement('div');
+                // box.classList.add('myDiv');
+                // document.getElementById("output").appendChild(box);
+                ingredients.push(document.getElementById("ingredients").value)
+                document.getElementById("output").innerHTML = ingredients;
+                document.getElementById("ingredients").value = "";
             }
-            if (vegan.checked) {
-                results["restrictions"].push("vegan");
-            }
-            if (dairy.checked) {
-                results["restrictions"].push("dairy");
-            }
-            if (gluten.checked) {
-                results["restrictions"].push("gluten");
-            }
-            if (nuts.checked) {
-                results["restrictions"].push("nuts");
-            }
-            if (egg.checked) {
-                results["restrictions"].push("egg");
-            }
-            if (shellfish.checked) {
-                results["restrictions"].push("shellfish");
-            }
-            if (document.getElementById("category").selectedIndex != 0) {
-                results["category"].push(getSelectedText("category"));
-            }
-            if (document.getElementById("time").selectedIndex != 0) {
-                results["time"].push(getSelectedText("time"));
-            }
-            console.log(results)
-            fetch("/recipes?" + new URLSearchParams(results).toString())
-                .then((response) => response.json())
-                .then((data) => data.forEach(row => {
 
-                    let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr)
-                    document.getElementById("answer-box").appendChild(tempDiv)
-                }));
+
+
+            reset.addEventListener("click", clear);
+            function clear() {
+                while (ingredients.length) { ingredients.pop() }
+                document.getElementById("output").innerHTML = "";
+            }
+
+            function answerBoxTemplate(title, titleDesc) {
+                return `<div class=''>
+                    <h3 class='recipe-title'>${title}</h3>
+                    <p class='recipe-desc'>${titleDesc}</p>
+                </div>`
+            }
+
+            function getSelectedText(elementId) {
+                var elt = document.getElementById(elementId);
+
+                if (elt.selectedIndex == -1)
+                    return null;
+
+                return elt.options[elt.selectedIndex].text;
+            }
+
+            submit.addEventListener("click", filterText);
+            function filterText() {
+                document.getElementById("answer-box").innerHTML = ""
+                let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
+
+                var vegetarian = document.getElementById("dietary-restrictions1");
+                var vegan = document.getElementById("dietary-restrictions2");
+                var dairy = document.getElementById("dietary-restrictions3");
+                var gluten = document.getElementById("dietary-restrictions4");
+                var nuts = document.getElementById("dietary-restrictions5");
+                var egg = document.getElementById("dietary-restrictions6");
+                var shellfish = document.getElementById("dietary-restrictions7");
+                if (vegetarian.checked) {
+                    results["restrictions"].push("vegetarian");
+                }
+                if (vegan.checked) {
+                    results["restrictions"].push("vegan");
+                }
+                if (dairy.checked) {
+                    results["restrictions"].push("dairy");
+                }
+                if (gluten.checked) {
+                    results["restrictions"].push("gluten");
+                }
+                if (nuts.checked) {
+                    results["restrictions"].push("nuts");
+                }
+                if (egg.checked) {
+                    results["restrictions"].push("egg");
+                }
+                if (shellfish.checked) {
+                    results["restrictions"].push("shellfish");
+                }
+                if (document.getElementById("category").selectedIndex != 0) {
+                    results["category"].push(getSelectedText("category"));
+                }
+                if (document.getElementById("time").selectedIndex != 0) {
+                    results["time"].push(getSelectedText("time"));
+                }
+                console.log(results)
+                fetch("/recipes?" + new URLSearchParams(results).toString())
+                    .then((response) => response.json())
+                    .then((data) => data.forEach(row => {
+
+                        let tempDiv = document.createElement("div")
+                        tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr)
+                        document.getElementById("answer-box").appendChild(tempDiv)
+                    }));
+            }
+
         }
 
 
