@@ -141,10 +141,10 @@
                 results["restrictions"].push("shellfish");
             }
             if (document.getElementById("category").selectedIndex != 0) {
-                results["category"].push(getSelectedText("category")).value;
+                results["category"].push(getSelectedText("category"));
             }
             if (document.getElementById("time").selectedIndex != 0) {
-                results["time"].push(getSelectedText("time")).value;
+                results["time"].push(getSelectedText("time"));
             }
             console.log(results)
             fetch("/recipes?" + new URLSearchParams(results).toString())
