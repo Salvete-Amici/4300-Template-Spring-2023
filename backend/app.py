@@ -31,10 +31,61 @@ CORS(app)
 # there's a much better and cleaner way to do this
 
 
+mapping = None
+ii = None
+
+
+def search_rank(query, allergens, inverted_index, recipe_dict):
+    # query is a list of strings, allergens is a list of strings, inverted_index is
+    # a dictionary mapping ingredients to which recipes they appear in. recipe_dict
+    # is a dictionary mapping recipe names to id, ingredients, and tags.
+    # Returns a ranked list of the top 20 recipes
+    postings1 = inverted_index[query[0]]
+    for ingredient in query:
+        postings2 = inverted_index[ingredient]
+        postings1 = merge_postings(postings1, postings2)
+
+    for allergen in allergens:
+        allergen_postings = inverted_index[allergen]
+        postings1 = not_merge_postings(postings1, allergen_postings)
+
+    similarity_ranking = []
+    for posting in postings1:
+        ingredients = recipe_dict[posting]['ingredients']
+        jaccard_sim = jaccard(query, ingredients)
+        similarity_ranking.append((posting, jaccard_sim))
+
+    similarity_ranking.sort(reverse=True, key=lambda x: x[1])
+    boundary = min(20, len(similarity_ranking))
+    return similarity_ranking[:boundary]
+
+
+def preprocess(recipe_list):
+    # Returns a dictionary mapping recipe name to id, a list of ingredients, and a list of tags
+    # Would be good to clean the recipe name
+    recipe_dictionary = {}
+    for recipe in recipe_list:
+        name = recipe["name"]
+        recipe_dictionary[name] = {"id": recipe["id"], "ingredients": clean(
+            recipe["ingredients"]), "tags": clean(recipe["tags"])}
+    return recipe_dictionary
+
+
+def inverted_index(recipe_dictionary):
+    # Returns a dictionary mapping ingredient names to a list of recipes that contain that ingredient
+    inverted_idx = {}
+    for name, info in recipe_dictionary.items():
+        for ingredient in info["ingredients"]:
+            if ingredient in inverted_idx:
+                inverted_idx[ingredient].append(name)
+            else:
+                inverted_idx[ingredient] = [name]
+    return inverted_idx
+
+
 def clean(l):
     ingr_list = re.findall(r"[\w -][\w -]+", l)
     new_list = []
-
     for ing in ingr_list:
         if ing[0] == " ":
             new_list.append(ing[1:])
@@ -79,31 +130,23 @@ def jaccard(ingr_list1, ingr_list2):
     return len(set.intersection(set1, set2))/len(set.union(set1, set2))
 
 
-def get_sql_recipes():
-    # query_sql = f"""SELECT name,id, tags, ingredients FROM episodes"""
-    query_sql = f"""SELECT * FROM episodes"""
-    keys = ["name", "id", "tags", "ingredients"]
-    data = mysql_engine.query_selector(query_sql)
-    print(data)
+def preprocessing(ingredients, restrictions, category, time):
+    # currently search does not use category or time
+    global mapping
+    if mapping is None:
+        query_sql = f"""SELECT * FROM rep2 limit 2"""
+        keys = ["name", "id", "minutes", "tags", "ingredients"]
+        data = mysql_engine.query_selector(query_sql)
+        zipping = [dict(zip(keys, i)) for i in data]
+        mapping = preprocess(zipping)
+        ii = inverted_index(mapping)
+    search_rank(ingredients, restrictions, ii, mapping)
     return [dict(zip(keys, i)) for i in data]
-
-
-def sql_search(episode):
-    query_sql = f"""SELECT * FROM episodes WHERE LOWER( title ) LIKE '%%{episode.lower()}%%' limit 10"""
-    keys = ["id", "title", "descr"]
-    data = mysql_engine.query_selector(query_sql)
-    return json.dumps([dict(zip(keys, i)) for i in data])
 
 
 @app.route("/")
 def home():
     return render_template('base.html', title="sample html")
-
-
-@app.route("/episodes")
-def episodes_search():
-    text = request.args.get("title")
-    return get_sql_recipes()
 
 
 @app.route("/recipes")
@@ -112,4 +155,8 @@ def recipe_search():
     restrictions = request.args.get("restrictions")
     category = request.args.get("category")
     time = request.args.get("time")
-# app.run(debug=True)
+    print(ingredients, restrictions, category, time)
+    return preprocessing(ingredients, restrictions, category, time)
+
+
+app.run(debug=True)
