@@ -13,7 +13,7 @@ os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
 # Don't worry about the deployment credentials, those are fixed
 # You can use a different DB name if you want to
 MYSQL_USER = "root"
-MYSQL_USER_PASSWORD = ""
+MYSQL_USER_PASSWORD = "Truffle123!"
 MYSQL_PORT = 3306
 MYSQL_DATABASE = "kardashiandb"
 
@@ -30,12 +30,17 @@ CORS(app)
 # but if you decide to use SQLAlchemy ORM framework,
 # there's a much better and cleaner way to do this
 
-
+# global variables
 mapping = None
 ii = None
+aii = None
+
+allergies = {"nuts": ["peanut", "peanut oil", "peanuts",
+                      "peanut butter", "walnut", "walnuts"]
+             }
 
 
-def search_rank(query, allergens, inverted_index, recipe_dict):
+def search_rank(query, allergens, allergy_inverted_index, inverted_index, recipe_dict):
     # query is a list of strings, allergens is a list of strings, inverted_index is
     # a dictionary mapping ingredients to which recipes they appear in. recipe_dict
     # is a dictionary mapping recipe names to id, ingredients, and tags.
@@ -46,7 +51,7 @@ def search_rank(query, allergens, inverted_index, recipe_dict):
         postings1 = merge_postings(postings1, postings2)
 
     for allergen in allergens:
-        allergen_postings = inverted_index[allergen]
+        allergen_postings = allergy_inverted_index[allergen]
         postings1 = not_merge_postings(postings1, allergen_postings)
 
     similarity_ranking = []
@@ -83,6 +88,24 @@ def inverted_index(recipe_dictionary):
     return inverted_idx
 
 
+def allergy_inverted_index(recipe_dictionary):
+    # Returns a dictionary mapping allergens to a list of recipes that contain that allergen
+    inverted_idx = {}
+    global allergies
+    for name, info in recipe_dictionary.items():
+        for al in allergies:
+            for ingr in info["ingredients"]:
+                if ingr in allergies[al]:
+                    if al in inverted_idx:
+                        inverted_idx[al].append(name)
+                    else:
+                        inverted_idx[al] = [name]
+    return inverted_idx
+
+
+# cleans the list inputted
+
+
 def clean(l):
     ingr_list = re.findall(r"[\w -][\w -]+", l)
     new_list = []
@@ -94,6 +117,7 @@ def clean(l):
     return new_list
 
 # code adapted from demo from class
+# returns a list containing all ingredients in either of the lists
 
 
 def merge_postings(postings1, postings2):
@@ -112,6 +136,7 @@ def merge_postings(postings1, postings2):
 
 
 # dish_list is list of strings, allergen is list of strings
+# returns a list containing all ingredients in dish_list that does not contain allergen
 def not_merge_postings(dish_list, allergen):
     merged = merge_postings(dish_list, allergen)
     new_list = dish_list.copy()
@@ -119,12 +144,12 @@ def not_merge_postings(dish_list, allergen):
         new_list.remove(t)
     return new_list
 
+# calculates the jaccard similarity between two ingredient lists
+
 
 def jaccard(ingr_list1, ingr_list2):
     set1 = set(ingr_list1)
     set2 = set(ingr_list2)
-    print(set1)
-    print(set1.intersection(set2))
     if len(set.union(set1, set2)) == 0:
         return 0
     return len(set.intersection(set1, set2))/len(set.union(set1, set2))
@@ -133,15 +158,24 @@ def jaccard(ingr_list1, ingr_list2):
 def preprocessing(ingredients, restrictions, category, time):
     # currently search does not use category or time
     global mapping
+    global ii
+    global aii
     if mapping is None:
-        query_sql = f"""SELECT * FROM rep2 limit 2"""
+        query_sql = f"""SELECT * FROM rep2"""
         keys = ["name", "id", "minutes", "tags", "ingredients"]
         data = mysql_engine.query_selector(query_sql)
         zipping = [dict(zip(keys, i)) for i in data]
         mapping = preprocess(zipping)
         ii = inverted_index(mapping)
-    search_rank(ingredients, restrictions, ii, mapping)
-    return [dict(zip(keys, i)) for i in data]
+        aii = allergy_inverted_index(mapping)
+    ranked = search_rank(ingredients, restrictions, aii, ii, mapping)
+    output = []
+    for rep in ranked:
+        name = rep[0]
+        d = {"title": name, "descr": mapping[name]["ingredients"]}
+        output.append(d)
+    print(output)
+    return json.dumps(output)
 
 
 @app.route("/")
@@ -151,12 +185,16 @@ def home():
 
 @app.route("/recipes")
 def recipe_search():
+    # need to first validate ingredients
+    # also need to clean (convert to lowercase if needed)
+    # destem ingredients (to deal with plural ingredients)
     ingredients = request.args.get("ingredients")
+    ingr = ingredients.split(",")
     restrictions = request.args.get("restrictions")
+    restrict = restrictions.split(",")
     category = request.args.get("category")
     time = request.args.get("time")
-    print(ingredients, restrictions, category, time)
-    return preprocessing(ingredients, restrictions, category, time)
+    return preprocessing(ingr, restrict, category, time)
 
 
 app.run(debug=True)
