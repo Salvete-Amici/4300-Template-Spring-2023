@@ -57,6 +57,8 @@ def search_rank(query, allergens, allergy_inverted_index, inverted_index, recipe
         postings1 = merge_postings(postings1, postings2)
 
     for allergen in allergens:
+        if allergen == "":
+            break
         allergen_postings = allergy_inverted_index[allergen]
         postings1 = not_merge_postings(postings1, allergen_postings)
 
@@ -98,14 +100,13 @@ def allergy_inverted_index(recipe_dictionary):
     # Returns a dictionary mapping allergens to a list of recipes that contain that allergen
     inverted_idx = {}
     global allergies
+    for i in allergies:
+        inverted_idx[i] = []
     for name, info in recipe_dictionary.items():
         for al in allergies:
             for ingr in info["ingredients"]:
                 if ingr in allergies[al]:
-                    if al in inverted_idx:
-                        inverted_idx[al].append(name)
-                    else:
-                        inverted_idx[al] = [name]
+                    inverted_idx[al].append(name)
     return inverted_idx
 
 
