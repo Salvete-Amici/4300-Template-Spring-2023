@@ -42,7 +42,7 @@ h1{
     background: transparent;
 } */
 
-.myDiv {
+/* .myDiv {
     height: 25px;
     width: 50px;
     border: 1px solid blue;
@@ -52,7 +52,12 @@ h1{
     height: 700px;
     border: solid black;
     position: relative;
-  }
+  } */
+
+#answer-box{
+    width: 700px;
+    margin-top:50px; 
+}
   .recipe-title{
     font-family: 'Kanit', sans-serif;
 }
@@ -60,6 +65,8 @@ h1{
 .recipe-desc{
     font-family: 'Montserrat', sans-serif;
 }
+
+
 
 /* .full-body-container{
     position: absolute;
