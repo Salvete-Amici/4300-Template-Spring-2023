@@ -4,6 +4,7 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
+import numpy as np
 
 # ROOT_PATH for linking with all your files.
 # Feel free to use a config.py or settings.py with a global export variable
@@ -57,6 +58,8 @@ def search_rank(query, allergens, allergy_inverted_index, inverted_index, recipe
         postings1 = merge_postings(postings1, postings2)
 
     for allergen in allergens:
+        if allergen == "":
+            break
         allergen_postings = allergy_inverted_index[allergen]
         postings1 = not_merge_postings(postings1, allergen_postings)
 
@@ -98,14 +101,13 @@ def allergy_inverted_index(recipe_dictionary):
     # Returns a dictionary mapping allergens to a list of recipes that contain that allergen
     inverted_idx = {}
     global allergies
+    for i in allergies:
+        inverted_idx[i] = []
     for name, info in recipe_dictionary.items():
         for al in allergies:
             for ingr in info["ingredients"]:
                 if ingr in allergies[al]:
-                    if al in inverted_idx:
-                        inverted_idx[al].append(name)
-                    else:
-                        inverted_idx[al] = [name]
+                    inverted_idx[al].append(name)
     return inverted_idx
 
 
@@ -183,6 +185,23 @@ def preprocessing(ingredients, restrictions, category, time):
     return json.dumps(output)
 
 
+def edit_dist(query, ingredient):
+    "Calculate the minimum edit distance between the query and an existing ingredient"
+    n_rows = len(query) + 1
+    n_cols = len(ingredient) + 1
+    #construct an edit distance matrix, assume instertion cost = 1, 
+    #deletion cost = 1, and substitution cost = 2
+    ins_cost = 1
+    del_cost = 1
+    mat = np.zeros((n_rows, n_cols))
+    mat[0] = np.arange(n_cols)
+    mat[:, 0] = np.arange(n_rows)
+    for i in range(1, n_rows):
+        for j in range(1, n_cols):
+            sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
+            mat[i,j] = min(mat[i-1,j] + del_cost, mat[i-1,j-1] + sub_cost, mat[i, j-1] + ins_cost) 
+    return mat[len(query), len(ingredient)]
+
 @app.route("/")
 def home():
     return render_template('base.html', title="sample html")
@@ -202,4 +221,4 @@ def recipe_search():
     return preprocessing(ingr, restrict, category, time)
 
 
-app.run(debug=True)
+# app.run(debug=True)
