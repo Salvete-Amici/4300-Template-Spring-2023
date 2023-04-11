@@ -10,27 +10,36 @@
 <body>
     </div id="content">
     <div class="container">
-        <form class="ingredient-input" onsubmit="return false">
-            <h1>PANTRY PAL</h1>
+        <form class="inputs" onsubmit="return false">
+            <div class="logo">
+                <img src="/static/images/pantry-pal-logo.png">
+            </div>
+            
+            <!-- <h1>PANTRY PAL</h1> -->
+            <!-- <div class="input-ingredients"></div> -->
             <label for="ingredients">Ingredients:</label>
             <input type="text" id="ingredients" name="ingredients" placeholder="Enter Ingredient">
             <button type="button" id="add">Add</button><br>
-            <p id='output'></p>
-            <label for="dietary-restrictions">Dietary Restrictions:</label><br>
-            <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions1" value="vegetarian">
-            <label for="dietary-restirctions1">Vegetarian</label><br>
-            <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions2" value="vegan">
-            <label for="dietary-restirctions2">Vegan</label><br>
-            <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions3" value="dairy-free">
-            <label for="dietary-restirctions3">Dairy Free</label><br>
-            <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions4" value="gluten-free">
-            <label for="dietary-restirctions4">Gluten Free</label><br>
-            <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions5" value="nut-free">
-            <label for="dietary-restirctions5">Nut Free</label><br>
-            <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions6" value="egg-free">
-            <label for="dietary-restirctions6">Egg Free</label><br>
-            <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions7" value="shellfish-free">
-            <label for="dietary-restirctions7">Shellfish Free</label><br>
+            <!-- </div> -->
+            <div class="ingredients-list" id="output"></div><br><br>
+            <div class="restrictions">
+                <label for="dietary-restrictions">Dietary Restrictions:</label><br>
+                <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions1" value="vegetarian">
+                <label for="dietary-restirctions1">Vegetarian</label><br>
+                <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions2" value="vegan">
+                <label for="dietary-restirctions2">Vegan</label><br>
+                <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions3" value="dairy-free">
+                <label for="dietary-restirctions3">Dairy Free</label><br>
+                <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions4" value="gluten-free">
+                <label for="dietary-restirctions4">Gluten Free</label><br>
+                <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions5" value="nut-free">
+                <label for="dietary-restirctions5">Nut Free</label><br>
+                <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions6" value="egg-free">
+                <label for="dietary-restirctions6">Egg Free</label><br>
+                <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions7" value="shellfish-free">
+                <label for="dietary-restirctions7">Shellfish Free</label><br>
+            </div>
+            
             <label for="category">Category:</label>
             <select name="category" id="category">
                 <option value="select-category">Select One</option>
@@ -49,14 +58,22 @@
             </select><br>
 
             <div class="btn-box">
-
+                <button type="reset" id="reset">Reset</button>
+                <button type="submit" id="submit">Submit</button>
             </div>
 
-            <input type="reset" id="reset" value="Reset">
-            <input type="submit" id="submit" value="Submit">
+            <!-- <input type="reset" id="reset" value="Reset"> -->
+            
 
 
         </form>
+
+        <div class="step-row">
+            <div id="progress"></div>
+            <div class="step-col"><small>Step 1: Add Your Ingredients</small></div>
+            <div class="step-col"><small>Step 2: Explore New Recipes</small></div>
+        </div>
+
     </div>
     <div id="answer-box">
 
@@ -71,6 +88,7 @@
         var addIng = document.getElementById("add");
         var reset = document.getElementById("reset");
         var submit = document.getElementById("submit");
+        var progress = document.getElementById("progress");
 
 
         const ingredients = [];
@@ -80,15 +98,23 @@
             // var box = document.createElement('div');
             // box.classList.add('myDiv');
             // document.getElementById("output").appendChild(box);
-            ingredients.push(document.getElementById("ingredients").value)
-            document.getElementById("output").innerHTML = ingredients;
+            ingredients.push(document.getElementById("ingredients").value);
+            // document.getElementById("output").innerHTML = ingredients;
+            addIngredientElmt(document.getElementById("ingredients").value);
             document.getElementById("ingredients").value = "";
         }
 
-
+        function addIngredientElmt(ingredient) {
+            const ing = document.createElement('div');
+            ing.className = "ingredient-element";
+            ing.innerHTML = ingredient;
+            const container = document.querySelector('#output');
+            container.appendChild(ing);
+        }
 
         reset.addEventListener("click", clear);
         function clear() {
+            progress.style.width = "500px"
             while (ingredients.length) { ingredients.pop() }
             document.getElementById("output").innerHTML = "";
         }
@@ -111,6 +137,7 @@
 
         submit.addEventListener("click", filterText);
         function filterText() {
+            progress.style.width = "1000px";
             document.getElementById("answer-box").innerHTML = ""
             let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
 

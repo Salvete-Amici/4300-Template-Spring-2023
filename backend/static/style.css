@@ -10,12 +10,13 @@ body{
 }
 
 .container{
-    width: 800px;
-    height: 600px;
+    width: 1000px;
+    height: 800px;
     margin: 8% auto;
     background: #fff;
     border-radius: 5px;
     position: relative;
+    overflow: hidden;
 }
 
 h1{
@@ -24,14 +25,100 @@ h1{
     color: #777;
 }
 
+
+
 .container form{
-    width: 700px;
+    width: 900px;
     position: absolute;
     top: 100px;
     left:40px;
 
 }
+form input{
+    width: 70%;
+    padding: 10px 5px;
+    margin: 2px 0;
+    border: 0;
+    border-bottom: 1px solid #999;
+    outline: none;
+    background: transparent;
+}
 
+/* .input-ingredients{
+    width: 100%;
+    padding: 10px 5px;
+    margin:2px 0;
+    position: center;
+} */
+
+.btn-box{
+    width: 100%;
+    margin: 30px auto;
+    text-align: center;
+
+}
+
+form button{
+    width: 110px;
+    height: 35px;
+    margin: 0 10px;
+    background: #8ABE53;
+    border-radius: 30px;
+    border: 0;
+    outline: none;
+    color:#fff;
+    cursor: pointer;
+
+}
+
+.logo img{
+    display: flex;
+    width: 500px;
+    height: auto;
+    margin-left:auto;
+    margin-right:auto;
+    position: center;
+}
+
+
+
+
+.step-row{
+    width: 1000px;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items:center;
+    box-shadow: 0 -1px 5px -1px #000;
+    position: relative;
+}
+
+.step-col{
+    width: 500px;
+    text-align:center;
+    color:#333;
+    position: relative;
+}
+
+#progress{
+    position: absolute;
+    height: 100%;
+    width: 500px;
+    background: linear-gradient(to right, #8ABE53, #096A2E);
+    transition: 1s;
+}
+
+#progress::after{
+    content: '';
+    height: 0;
+    width: 0;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    position: absolute;
+    right: -30px;
+    top: 0;
+    border-left: 30px solid #096A2E;
+}
 /* .answer-box{
     width: 1000px;
     height: 1000px;
@@ -77,6 +164,26 @@ h1{
 
 .recipe-desc{
     font-family: 'Montserrat', sans-serif;
+}
+
+.ingredients-list{
+    width: 100%;
+    margin: 30px auto;
+    text-align: center;
+
+}
+.ingredient-element{
+    width: 110px;
+    height: 35px;
+    float: left;
+    margin: 0 10px;
+    background: #096A2E;
+    border-radius: 30px;
+    border: 0;
+    outline: none;
+    color:#fff;
+    cursor: pointer;
+
 }
 
 
