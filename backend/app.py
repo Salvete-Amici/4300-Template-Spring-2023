@@ -35,6 +35,7 @@ CORS(app)
 mapping = None
 ii = None
 aii = None
+URL = "https://www.food.com/"
 
 allergies = {"nuts": ["peanut", "peanut oil", "hazelnut",
                       "peanut butter", "walnut", "pecan", "cashew",
@@ -194,7 +195,8 @@ def preprocessing(ingredients, restrictions, category, time):
     output = []
     for rep in ranked:
         name = rep[0]
-        d = {"title": name, "descr": mapping[name]["ingredients"]}
+        d = {"title": name, "descr": mapping[name]
+             ["ingredients"], "link": URL + str(mapping[name]["id"])}
         output.append(d)
     return json.dumps(output)
 
@@ -234,15 +236,21 @@ def recipe_search():
     # destem ingredients (to deal with plural ingredients)
     ingredients = request.args.get("ingredients")
     ingr = ingredients.split(",")
+    # cleaning ingredients
     cleaned_ingr = []
     for i in ingr:
         for cleaned in clean_ingredient(i):
             cleaned_ingr.append(cleaned.lower())
+
+    # removing duplicates
+    dupe = set(cleaned_ingr)
+    no_dupe_ingr = list(dupe)
+
     restrictions = request.args.get("restrictions")
     restrict = restrictions.split(",")
     category = request.args.get("category")
     time = request.args.get("time")
-    return preprocessing(cleaned_ingr, restrict, category, time)
+    return preprocessing(no_dupe_ingr, restrict, category, time)
 
 
 # app.run(debug=True)
