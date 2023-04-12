@@ -36,15 +36,29 @@ mapping = None
 ii = None
 aii = None
 
-allergies = {"nuts": ["peanut", "peanut oil", "peanuts",
-                      "peanut butter", "walnut", "walnuts"],
-             "vegan": ["bacon", "chicken"],
-             "vegetarian": ["bacon", "chicken"],
-             "dairy": ["milk"],
-             "gluten": ["flour", "pasta", "angel hair pasta"],
+allergies = {"nuts": ["peanut", "peanut oil", "hazelnut",
+                      "peanut butter", "walnut", "pecan", "cashew",
+                      "pistachio", "almond", "almond butter", "tree nut",
+                      "macadamia", "pine nut", "pine", "brazil"],
+             "vegetarian": ["bacon", "chicken", "beef", "duck", "fish",
+                            "lamb, lobster", "oyster", "pork", "scallop",
+                            "turkey", "venison", "crab", "clam", "rabbit",
+                            "goat", "fowl", "sausage", "bologna", "chorizo",
+                            "pepperoni", "tuna", "tilapia", "ham"],
+             "dairy": ["milk", "butter", "ghee", "buttermilk",
+                       "cheese", "paneer", "goat cheese", "sour cream",
+                       "whipped cream", "half and half", "cottage cheese",
+                       "whole milk", "ice cream", "pudding", "yogurt"],
+             "gluten": ["flour", "pasta", "angel hair pasta", "rye", "wheat",
+                        "bagel", "cereal", "beer"],
              "egg": ["egg", "eggs"],
-             "shellfish": ["shrimp", "crab", "lobster"]
+             "shellfish": ["shrimp", "crab", "lobster", "prawn", "crawfish",
+                           "crayfish", "crawdad", "clam", "cockle", "mussel",
+                           "octopus", "oyster", "scallop", "sea cucumber", "snail"]
              }
+
+allergies["vegan"] = allergies["vegetarian"] + \
+    allergies["dairy"] + allergies["egg"]
 
 
 def search_rank(query, allergens, allergy_inverted_index, inverted_index, recipe_dict):
@@ -189,8 +203,8 @@ def edit_dist(query, ingredient):
     "Calculate the minimum edit distance between the query and an existing ingredient"
     n_rows = len(query) + 1
     n_cols = len(ingredient) + 1
-    #construct an edit distance matrix, assume instertion cost = 1, 
-    #deletion cost = 1, and substitution cost = 2
+    # construct an edit distance matrix, assume instertion cost = 1,
+    # deletion cost = 1, and substitution cost = 2
     ins_cost = 1
     del_cost = 1
     mat = np.zeros((n_rows, n_cols))
@@ -199,26 +213,36 @@ def edit_dist(query, ingredient):
     for i in range(1, n_rows):
         for j in range(1, n_cols):
             sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
-            mat[i,j] = min(mat[i-1,j] + del_cost, mat[i-1,j-1] + sub_cost, mat[i, j-1] + ins_cost) 
+            mat[i, j] = min(mat[i-1, j] + del_cost,
+                            mat[i-1, j-1] + sub_cost, mat[i, j-1] + ins_cost)
     return mat[len(query), len(ingredient)]
+
 
 @app.route("/")
 def home():
     return render_template('base.html', title="sample html")
 
 
+def clean_ingredient(str):
+    cleaned = re.findall(r"[a-zA-Z ]+", str)
+    return cleaned
+
+
 @app.route("/recipes")
 def recipe_search():
     # need to first validate ingredients
-    # also need to clean (convert to lowercase if needed)
     # destem ingredients (to deal with plural ingredients)
     ingredients = request.args.get("ingredients")
     ingr = ingredients.split(",")
+    cleaned_ingr = []
+    for i in ingr:
+        for cleaned in clean_ingredient(i):
+            cleaned_ingr.append(cleaned.lower())
     restrictions = request.args.get("restrictions")
     restrict = restrictions.split(",")
     category = request.args.get("category")
     time = request.args.get("time")
-    return preprocessing(ingr, restrict, category, time)
+    return preprocessing(cleaned_ingr, restrict, category, time)
 
 
 # app.run(debug=True)
