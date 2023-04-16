@@ -4,26 +4,88 @@
 <link rel="stylesheet" href="/static/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
-    rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
 
 <body>
-    </div id="content">
+    
     <div class="container">
-        <form class="inputs" onsubmit="return false">
+        <!-- <form class="inputs" onsubmit="return false"> -->
+        <form id="form1">
             <div class="logo">
                 <img src="/static/images/pantry-pal-logo.png">
             </div>
+            <label for="input-ingredients">Ingredients:</label>
+            <input type="text" id="input-ingredients" name="input-ingredients" placeholder="Enter Ingredient">
+            <button type="button" id="add">Add</button>
+            <!-- <div class="two-col">
+                <div class="col1">
+                    <label for="optional">Optional Ingredients:</label>
+                </div>
+                <div class="col2">
+                    <label for="mandatory">Mandatory Ingredients:</label>
+                </div>
+            </div> -->
             
-            <!-- <h1>PANTRY PAL</h1> -->
-            <!-- <div class="input-ingredients"></div> -->
-            <label for="ingredients">Ingredients:</label>
-            <input type="text" id="ingredients" name="ingredients" placeholder="Enter Ingredient">
-            <button type="button" id="add">Add</button><br>
+            <!-- <div class="lists" id="output"> -->
+                <!-- <label for="optional">Optional Ingredients:</label> -->
+                <!-- <div class="list" id="optional">
+                    <div class="list-item" draggable="true">Optional Ingredients</div>
+                </div> -->
+                <!-- <label for="mandatory">Mandatory Ingredients:</label> -->
+                <!-- <div class="list" id="mandatory">
+                    <div class="list-item" draggable="true">Mandatory Ingredients</div>
+                </div> -->
+
             <!-- </div> -->
-            <div class="ingredients-list" id="output"></div><br><br>
+            
+            <div class="ingredient-list" id="output">
+                <ul class="ingredient-container">
+                    <!-- <li>
+                        <div class="item" id="test">
+                            <a href="javascript:void(0)" class="remove" title="Remove">×</a>
+                            <label for="test">Test</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item" id="test2">
+                            <a href="javascript:void(0)" class="remove" title="Remove">×</a>
+                            <label for="test2">Test2</label>
+                        </div>
+                    </li> -->
+                </ul>
+
+                <!-- <ul class="ks-cboxtags">
+                    <li><input type="checkbox" id="checkboxOne" value="Rainbow Dash"><label for="checkboxOne">Rainbow Dash</label></li>
+                    <li><input type="checkbox" id="checkboxTwo" value="Cotton Candy" checked><label for="checkboxTwo">Cotton Candy</label></li>
+                    <li><input type="checkbox" id="checkboxThree" value="Rarity" checked><label for="checkboxThree">Rarity</label></li>
+                    <li><input type="checkbox" id="checkboxFour" value="Moondancer"><label for="checkboxFour">Moondancer</label></li>
+                    <li><input type="checkbox" id="checkboxFive" value="Surprise"><label for="checkboxFive">Surprise</label></li>
+                    <li><input type="checkbox" id="checkboxSix" value="Twilight Sparkle" checked><label for="checkboxSix">Twilight
+                                    Sparkle</label></li>
+                    <li><input type="checkbox" id="checkboxSeven" value="Fluttershy"><label for="checkboxSeven">Fluttershy</label></li>
+                    <li><input type="checkbox" id="checkboxEight" value="Derpy Hooves"><label for="checkboxEight">Derpy Hooves</label></li>
+                    <li><input type="checkbox" id="checkboxNine" value="Princess Celestia"><label for="checkboxNine">Princess
+                                    Celestia</label></li>
+                    <li><input type="checkbox" id="checkboxTen" value="Gusty"><label for="checkboxTen">Gusty</label></li>
+                    <li class="ks-selected"><input type="checkbox" id="checkboxEleven" value="Discord"><label for="checkboxEleven">Discord</label></li>
+                    <li><input type="checkbox" id="checkboxTwelve" value="Clover"><label for="checkboxTwelve">Clover</label></li>
+                    <li><input type="checkbox" id="checkboxThirteen" value="Baby Moondancer"><label for="checkboxThirteen">Baby
+                                    Moondancer</label></li>
+                    <li><input type="checkbox" id="checkboxFourteen" value="Medley"><label for="checkboxFourteen">Medley</label></li>
+                    <li><input type="checkbox" id="checkboxFifteen" value="Firefly"><label for="checkboxFifteen">Firefly</label></li>
+                  </ul> -->
+            </div>
+            <div class="btn-box">
+                <button style="background-color: #6B7280" type="reset" id="reset1">Reset</button>
+                <button type="button" id="next">Next</button>
+            </div>
+        </form>
+        <form id="form2" onsubmit="return false">
+            <label for="restrictions">Dietary Restrictions:</label>
             <div class="restrictions">
-                <label for="dietary-restrictions">Dietary Restrictions:</label><br>
+                
                 <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions1" value="vegetarian">
                 <label for="dietary-restirctions1">Vegetarian</label><br>
                 <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions2" value="vegan">
@@ -58,7 +120,8 @@
             </select><br>
 
             <div class="btn-box">
-                <button type="reset" id="reset">Reset</button>
+                <button type="button" id="back">Back</button>
+                <button style="background-color: #6B7280" type="reset" id="reset2">Reset</button>
                 <button type="submit" id="submit">Submit</button>
             </div>
 
@@ -71,7 +134,8 @@
         <div class="step-row">
             <div id="progress"></div>
             <div class="step-col"><small>Step 1: Add Your Ingredients</small></div>
-            <div class="step-col"><small>Step 2: Explore New Recipes</small></div>
+            <div class="step-col"><small>Step 2: Add Your Preferences</small></div>
+            <div class="step-col"><small>Step 3: Explore New Recipes</small></div>
         </div>
 
     </div>
@@ -81,40 +145,76 @@
 
 
 
-    </div>
+    
 
     <script>
         
         var addIng = document.getElementById("add");
-        var reset = document.getElementById("reset");
+        var reset1 = document.getElementById("reset1");
+        var reset2 = document.getElementById("reset2");
         var submit = document.getElementById("submit");
+        var form1 = document.getElementById("form1");
+        var form2 = document.getElementById("form2")
+        var next = document.getElementById("next");
+        var back = document.getElementById("back");
         var progress = document.getElementById("progress");
+
+        next.onclick = function() {
+            form1.style.left = "-1000px";
+            form2.style.left = "40px";
+            progress.style.width = "666px";
+            console.log(ingredients);
+        }
+        back.onclick = function() {
+            form1.style.left = "40px";
+            form2.style.left = "1000px";
+            progress.style.width = "333px";
+        }
 
 
         const ingredients = [];
 
         addIng.addEventListener("click", add);
         function add() {
-            // var box = document.createElement('div');
-            // box.classList.add('myDiv');
-            // document.getElementById("output").appendChild(box);
-            ingredients.push(document.getElementById("ingredients").value);
-            // document.getElementById("output").innerHTML = ingredients;
-            addIngredientElmt(document.getElementById("ingredients").value);
-            document.getElementById("ingredients").value = "";
+            
+            var ingredient = document.getElementById("input-ingredients").value;
+            ingredients.push(ingredient);
+            const container = document.querySelector(".ingredient-container")
+            var li = document.createElement("li");
+            var div = document.createElement("div");
+            div.className = "item";
+            div.id = ingredient;
+            var remove = document.createElement("a");
+            remove.href = "javascript:void(0)";
+            remove.className = "remove";
+            remove.innerText = "×";
+            remove.title = "Remove";
+            var label = document.createElement("label");
+            label.htmlFor = ingredient;
+            label.innerText = ingredient;
+            div.appendChild(remove);
+            div.appendChild(label);
+            li.appendChild(div);
+            container.appendChild(li);
+            console.log(ingredients);
+
+            
+
+            // addIngredientElmt(document.getElementById("input-ingredients").value);
+            document.getElementById("input-ingredients").value = "";
+            
         }
 
         function addIngredientElmt(ingredient) {
-            const ing = document.createElement('div');
-            ing.className = "ingredient-element";
+            const li = document.createElement('div');
             ing.innerHTML = ingredient;
-            const container = document.querySelector('#output');
+            const container = document.querySelector('#optional');
             container.appendChild(ing);
         }
 
-        reset.addEventListener("click", clear);
+        reset1.addEventListener("click", clear);
         function clear() {
-            progress.style.width = "500px"
+            progress.style.width = "333px"
             while (ingredients.length) { ingredients.pop() }
             document.getElementById("output").innerHTML = "";
         }
@@ -187,6 +287,58 @@
         }
 
 
+        // code for drag drop
+
+        // var list_items = document.querySelectorAll('.list-item');
+        // const lists = document.querySelectorAll('.list');
+
+        
+
+        // let draggedItem = null;
+
+        // for (let i = 0; i < list_items.length; i++) {
+        //     const item = list_items[i];
+
+        //     item.addEventListener('dragstart', function() {
+        //         draggedItem = item;
+        //         setTimeout(function() {
+        //            item.style.display = 'none';
+        //         }, 0);
+                
+        //     });
+
+        //     item.addEventListener('dragend', function() {
+        //         setTimeout(function() {
+        //             draggedItem.style.display = 'block';
+        //             draggedItem = null;
+        //         }, 0);
+                
+        //     });
+
+        //     for (let j = 0; j < lists.length; j++) {
+        //         const list = lists[j];
+
+        //         list.addEventListener('dragover', function(e) {
+        //             console.log('dragover');
+        //             e.preventDefault();
+        //         });
+        //         list.addEventListener('dragenter', function(e) {
+        //             e.preventDefault();
+        //             this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+        //         });
+        //         list.addEventListener('dragleave', function(e) {
+        //             this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        //         });
+        //         list.addEventListener('drop', function(e) {
+        //             console.log('drop');
+        //             this.append(draggedItem);
+        //             this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        //         });
+        //     }
+        //     list_items = document.querySelectorAll('.list-item');
+        // }
+
+
 
 
 
@@ -202,55 +354,3 @@
 
 
 </body>
-
-<!-- <body>
-    <div class="full-body-container">
-        <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-c">C</h1>
-                <h1 id="google-s">S</h1>
-                <h1 id="google-4">4</h1>
-                <h1 id="google-3">3</h1>
-                <h1 id="google-0-1">0</h1>
-                <h1 id="google-0-2">0</h1>
-            </div>
-            <div class="input-box" onclick="sendFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val"
-                    onkeyup="filterText()">
-            </div>
-        </div>
-        <div id="answer-box">
-
-        </div>
-    </div>
-
-    <script>
-
-        function answerBoxTemplate(title, titleDesc) {
-            return `<div class=''>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-            </div>`
-        }
-
-        function sendFocus() {
-            document.getElementById('filter-text-val').focus()
-        }
-
-        function filterText() {
-            document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
-                .then((response) => response.json())
-                .then((data) => data.forEach(row => {
-
-                    let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr)
-                    document.getElementById("answer-box").appendChild(tempDiv)
-                }));
-
-        }
-
-    </script>
-</body> -->
