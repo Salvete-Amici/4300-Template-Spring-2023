@@ -11,7 +11,6 @@
 <body>
     
     <div class="container">
-        <!-- <form class="inputs" onsubmit="return false"> -->
         <div class="step-row">
             <div id="progress"></div>
             <div class="step-col"><small>Step 1: Add Your Ingredients</small></div>
@@ -25,26 +24,6 @@
             <label for="input-ingredients">Ingredients:</label>
             <input type="text" id="input-ingredients" name="input-ingredients" placeholder="Enter Ingredient">
             <button type="button" id="add">Add</button>
-            <!-- <div class="two-col">
-                <div class="col1">
-                    <label for="optional">Optional Ingredients:</label>
-                </div>
-                <div class="col2">
-                    <label for="mandatory">Mandatory Ingredients:</label>
-                </div>
-            </div> -->
-            
-            <!-- <div class="lists" id="output"> -->
-                <!-- <label for="optional">Optional Ingredients:</label> -->
-                <!-- <div class="list" id="optional">
-                    <div class="list-item" draggable="true">Optional Ingredients</div>
-                </div> -->
-                <!-- <label for="mandatory">Mandatory Ingredients:</label> -->
-                <!-- <div class="list" id="mandatory">
-                    <div class="list-item" draggable="true">Mandatory Ingredients</div>
-                </div> -->
-
-            <!-- </div> -->
             
             <div class="ingredient-list" id="ing-output">
                 <ul class="ingredient-container" id="ingredient-container"></ul>
@@ -57,9 +36,7 @@
             </div>
         </form>
         <form id="form2" onsubmit="return false">
-            <!-- <div class="logo">
-                <img src="/static/images/pantry-pal-logo.png">
-            </div> -->
+
             <label for="mandatory">Choose Mandatory Ingredients:<br></label>
             <div class="mandatory" id="mandatory">
                 <ul class="mandatory-list" id="mandatory-list"></ul>
@@ -108,7 +85,7 @@
                 <button type="submit" id="submit">Submit</button>
             </div>
 
-            <!-- <input type="reset" id="reset" value="Reset"> -->
+
             
 
 
