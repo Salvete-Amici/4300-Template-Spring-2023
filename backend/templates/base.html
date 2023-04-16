@@ -41,41 +41,9 @@
             <!-- </div> -->
             
             <div class="ingredient-list" id="ing-output">
-                <ul class="ingredient-container" id="ingredient-container">
-                    <!-- <li>
-                        <div class="item" id="test">
-                            <a href="javascript:void(0)" class="remove" title="Remove">×</a>
-                            <label for="test">Test</label>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item" id="test2">
-                            <a href="javascript:void(0)" class="remove" title="Remove">×</a>
-                            <label for="test2">Test2</label>
-                        </div>
-                    </li> -->
-                </ul>
+                <ul class="ingredient-container" id="ingredient-container"></ul>
 
-                <!-- <ul class="ks-cboxtags">
-                    <li><input type="checkbox" id="checkboxOne" value="Rainbow Dash"><label for="checkboxOne">Rainbow Dash</label></li>
-                    <li><input type="checkbox" id="checkboxTwo" value="Cotton Candy" checked><label for="checkboxTwo">Cotton Candy</label></li>
-                    <li><input type="checkbox" id="checkboxThree" value="Rarity" checked><label for="checkboxThree">Rarity</label></li>
-                    <li><input type="checkbox" id="checkboxFour" value="Moondancer"><label for="checkboxFour">Moondancer</label></li>
-                    <li><input type="checkbox" id="checkboxFive" value="Surprise"><label for="checkboxFive">Surprise</label></li>
-                    <li><input type="checkbox" id="checkboxSix" value="Twilight Sparkle" checked><label for="checkboxSix">Twilight
-                                    Sparkle</label></li>
-                    <li><input type="checkbox" id="checkboxSeven" value="Fluttershy"><label for="checkboxSeven">Fluttershy</label></li>
-                    <li><input type="checkbox" id="checkboxEight" value="Derpy Hooves"><label for="checkboxEight">Derpy Hooves</label></li>
-                    <li><input type="checkbox" id="checkboxNine" value="Princess Celestia"><label for="checkboxNine">Princess
-                                    Celestia</label></li>
-                    <li><input type="checkbox" id="checkboxTen" value="Gusty"><label for="checkboxTen">Gusty</label></li>
-                    <li class="ks-selected"><input type="checkbox" id="checkboxEleven" value="Discord"><label for="checkboxEleven">Discord</label></li>
-                    <li><input type="checkbox" id="checkboxTwelve" value="Clover"><label for="checkboxTwelve">Clover</label></li>
-                    <li><input type="checkbox" id="checkboxThirteen" value="Baby Moondancer"><label for="checkboxThirteen">Baby
-                                    Moondancer</label></li>
-                    <li><input type="checkbox" id="checkboxFourteen" value="Medley"><label for="checkboxFourteen">Medley</label></li>
-                    <li><input type="checkbox" id="checkboxFifteen" value="Firefly"><label for="checkboxFifteen">Firefly</label></li>
-                  </ul> -->
+                
             </div>
             <div class="btn-box">
                 <button style="background-color: #6B7280" type="reset" id="reset1">Reset</button>
@@ -83,23 +51,29 @@
             </div>
         </form>
         <form id="form2" onsubmit="return false">
+            <label for="mandatory">Choose Mandatory Ingredients:<br></label>
+            <div class="mandatory" id="mandatory">
+                <ul class="mandatory-list" id="mandatory-list"></ul>
+            </div>
+            
+
             <label for="restrictions">Dietary Restrictions:</label>
             <div class="restrictions">
                 
-                <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions1" value="vegetarian">
-                <label for="dietary-restirctions1">Vegetarian</label><br>
-                <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions2" value="vegan">
-                <label for="dietary-restirctions2">Vegan</label><br>
-                <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions3" value="dairy-free">
-                <label for="dietary-restirctions3">Dairy Free</label><br>
-                <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions4" value="gluten-free">
-                <label for="dietary-restirctions4">Gluten Free</label><br>
-                <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions5" value="nut-free">
-                <label for="dietary-restirctions5">Nut Free</label><br>
-                <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions6" value="egg-free">
-                <label for="dietary-restirctions6">Egg Free</label><br>
-                <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions7" value="shellfish-free">
-                <label for="dietary-restirctions7">Shellfish Free</label><br>
+                <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions" value="vegetarian">
+                <label for="dietary-restrictions1">Vegetarian</label><br>
+                <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions" value="vegan">
+                <label for="dietary-restrictions2">Vegan</label><br>
+                <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions" value="dairy-free">
+                <label for="dietary-restrictions3">Dairy Free</label><br>
+                <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions" value="gluten-free">
+                <label for="dietary-restrictions4">Gluten Free</label><br>
+                <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions" value="nut-free">
+                <label for="dietary-restrictions5">Nut Free</label><br>
+                <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions" value="egg-free">
+                <label for="dietary-restrictions6">Egg Free</label><br>
+                <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions" value="shellfish-free">
+                <label for="dietary-restrictions7">Shellfish Free</label><br>
             </div>
             
             <label for="category">Category:</label>
@@ -158,28 +132,15 @@
         var next = document.getElementById("next");
         var back = document.getElementById("back");
         var progress = document.getElementById("progress");
-
-        next.onclick = function() {
-            form1.style.left = "-1000px";
-            form2.style.left = "40px";
-            progress.style.width = "666px";
-            console.log(ingredients);
-        }
-        back.onclick = function() {
-            form1.style.left = "40px";
-            form2.style.left = "1000px";
-            progress.style.width = "333px";
-        }
-
-
         const ingredients = [];
+        const optional = [];
+        const mandatory = [];
 
         addIng.addEventListener("click", add);
         function add() {
-            
             var ingredient = document.getElementById("input-ingredients").value;
             ingredients.push(ingredient);
-            const container = document.querySelector(".ingredient-container")
+            const container = document.querySelector(".ingredient-container");
             var li = document.createElement("li");
             var div = document.createElement("div");
             div.className = "item";
@@ -198,24 +159,48 @@
             container.appendChild(li);
             console.log(ingredients);
 
-            
-
-            // addIngredientElmt(document.getElementById("input-ingredients").value);
             document.getElementById("input-ingredients").value = "";
             
         }
 
-        function addIngredientElmt(ingredient) {
-            const li = document.createElement('div');
-            ing.innerHTML = ingredient;
-            const container = document.querySelector('#optional');
-            container.appendChild(ing);
+        next.onclick = function() {
+            form1.style.left = "-1000px";
+            form2.style.left = "40px";
+            progress.style.width = "666px";
+            const container = document.querySelector(".mandatory-list");
+            for (let i = 0; i < ingredients.length; i++) {
+                if (!optional.includes(ingredients[i]) && !mandatory.includes(ingredients[i])){
+                    var li = document.createElement("li");
+                    var input = document.createElement("input");
+                    input.type = "checkbox";
+                    input.id = "checkbox"+i;
+                    input.name = "ingredient";
+                    input.value = ingredients[i];
+                    var label = document.createElement("label");
+                    label.htmlFor = input.id;
+                    label.innerText = ingredients[i];
+                    li.appendChild(input);
+                    li.appendChild(label);
+                    container.appendChild(li);
+                    optional.push(ingredients[i]);
+                }
+
+            }
+            // console.log(ingredients);
+        }
+        back.onclick = function() {
+            form1.style.left = "40px";
+            form2.style.left = "1000px";
+            progress.style.width = "333px";
         }
 
         reset1.addEventListener("click", clear1);
         function clear1() {
             progress.style.width = "333px"
             while (ingredients.length) { ingredients.pop() }
+            while (mandatory.length) { mandatory.pop() }
+            while (optional.length) { optional.pop() }
+            document.getElementById("mandatory-list").innerHTML = "";
             document.getElementById("ingredient-container").innerHTML = "";
         }
         reset2.addEventListener("click", clear2);
@@ -224,6 +209,25 @@
             // while (ingredients.length) { ingredients.pop() }
             // document.getElementById("ing-output").innerHTML = "";
         }
+
+        function getOptional() {
+            var checkboxes = document.getElementsByName("ingredient");
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked && !mandatory.includes(checkboxes[i].value)) {
+                    mandatory.push(checkboxes[i].value);
+                }
+                else if (!checkboxes[i].checked && mandatory.includes(checkboxes[i].value)) {
+                    let index = mandatory.findIndex(function(x) {
+                        return x == checkboxes[i].value
+                    });
+                    mandatory.splice(index, 1);
+                }
+            }
+            let optionalFinal = optional.filter(x => !mandatory.includes(x));
+            return optionalFinal;
+        }
+
+        
 
         function answerBoxTemplate(title, titleDesc) {
             return `<div class=''>
@@ -246,7 +250,11 @@
             progress.style.width = "1000px";
             document.getElementById("answer-box").innerHTML = "";
             // document.getElementById("answer-box").scrollIntoView;
-            let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
+            const optionalIng = getOptional();
+            console.log("mandatory: " + mandatory);
+            console.log("optional: " + optionalIng);
+            let results = { "mandatory": mandatory, "optional": optionalIng, "restrictions": [], "category": [], "time": [] };
+            // let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
 
             var vegetarian = document.getElementById("dietary-restrictions1");
             var vegan = document.getElementById("dietary-restrictions2");

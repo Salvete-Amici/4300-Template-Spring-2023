@@ -165,7 +165,7 @@ form button {
 .ingredient-list {
     max-width: 640px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 ul.ingredient-container {
@@ -175,19 +175,27 @@ ul.ingredient-container {
 
 ul.ingredient-container li {
     display: inline;
+    margin-right:10px;
 }
 
 ul.ingredient-container li a {
     /* content:"\f00d"; */
     color:#ffffff;
     text-decoration:none;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 3px;
     margin-left:10px;
+    /* margin-top:20px; */
     
 }
+ul.ingredient-container li a:hover {
+    background-image: linear-gradient(rgba(0,0,0,0.1) 0 0);
+  }
 
 ul.ingredient-container li .item {
-    background-color: #8ABE53;
-    border:1px solid #7ba949;
+    border: 2px solid #1bdbf8;
+    background-color: #12bbd4;
     border-radius: 25px;
     display:inline-block;
     /* height: 35px; */
@@ -214,14 +222,15 @@ ul.ingredient-container li label {
 
 }
 
-ul.ks-cboxtags {
+ul.mandatory-list {
     list-style: none;
     padding: 20px;
 }
-ul.ks-cboxtags li{
+ul.mandatory-list li{
   display: inline;
+  margin-right:10px;
 }
-ul.ks-cboxtags li label{
+ul.mandatory-list li label{
     display: inline-block;
     background-color: rgba(255, 255, 255, .9);
     border: 2px solid rgba(139, 139, 139, .3);
@@ -238,12 +247,12 @@ ul.ks-cboxtags li label{
     transition: all .2s;
 }
 
-ul.ks-cboxtags li label {
+ul.mandatory-list li label {
     padding: 8px 12px;
     cursor: pointer;
 }
 
-ul.ks-cboxtags li label::before {
+ul.mandatory-list li label::before {
     display: inline-block;
     font-style: normal;
     font-variant: normal;
@@ -253,33 +262,33 @@ ul.ks-cboxtags li label::before {
     font-weight: 900;
     font-size: 12px;
     padding: 2px 6px 2px 2px;
-    content: "\f00d";
+    content: "\f067";
     transition: transform .3s ease-in-out;
 }
 
-ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
+ul.mandatory-list li input[type="checkbox"]:checked + label::before {
     content: "\f00c";
     transform: rotate(-360deg);
     transition: transform .3s ease-in-out;
 }
 
-ul.ks-cboxtags li input[type="checkbox"]:checked + label {
+ul.mandatory-list li input[type="checkbox"]:checked + label {
     border: 2px solid #1bdbf8;
     background-color: #12bbd4;
     color: #fff;
     transition: all .2s;
 }
 
-ul.ks-cboxtags li input[type="checkbox"] {
+ul.mandatory-list li input[type="checkbox"] {
   display: absolute;
 }
-ul.ks-cboxtags li input[type="checkbox"] {
+ul.mandatory-list li input[type="checkbox"] {
   position: absolute;
   opacity: 0;
 }
-ul.ks-cboxtags li input[type="checkbox"]:focus + label {
+/* ul.mandatory-list li input[type="checkbox"]:focus + label {
   border: 2px solid #e9a1ff;
-}
+} */
 
 .lists{
     display: flex;
