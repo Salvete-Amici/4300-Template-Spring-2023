@@ -4,7 +4,7 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-import numpy as np
+#import numpy as np
 
 # ROOT_PATH for linking with all your files.
 # Feel free to use a config.py or settings.py with a global export variable
@@ -201,23 +201,23 @@ def preprocessing(ingredients, restrictions, category, time):
     return json.dumps(output)
 
 
-def edit_dist(query, ingredient):
-    "Calculate the minimum edit distance between the query and an existing ingredient"
-    n_rows = len(query) + 1
-    n_cols = len(ingredient) + 1
+#def edit_dist(query, ingredient):
+    #"Calculate the minimum edit distance between the query and an existing ingredient"
+    #n_rows = len(query) + 1
+    #n_cols = len(ingredient) + 1
     # construct an edit distance matrix, assume instertion cost = 1,
     # deletion cost = 1, and substitution cost = 2
-    ins_cost = 1
-    del_cost = 1
-    mat = np.zeros((n_rows, n_cols))
-    mat[0] = np.arange(n_cols)
-    mat[:, 0] = np.arange(n_rows)
-    for i in range(1, n_rows):
-        for j in range(1, n_cols):
-            sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
-            mat[i, j] = min(mat[i-1, j] + del_cost,
-                            mat[i-1, j-1] + sub_cost, mat[i, j-1] + ins_cost)
-    return mat[len(query), len(ingredient)]
+    #ins_cost = 1
+    #del_cost = 1
+    #mat = np.zeros((n_rows, n_cols))
+    #mat[0] = np.arange(n_cols)
+    #mat[:, 0] = np.arange(n_rows)
+    #for i in range(1, n_rows):
+        #for j in range(1, n_cols):
+            #sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
+            #mat[i, j] = min(mat[i-1, j] + del_cost,
+                            #mat[i-1, j-1] + sub_cost, mat[i, j-1] + ins_cost)
+    #return mat[len(query), len(ingredient)]
 
 
 @app.route("/")
