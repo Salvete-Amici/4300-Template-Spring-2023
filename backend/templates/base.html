@@ -40,8 +40,8 @@
 
             <!-- </div> -->
             
-            <div class="ingredient-list" id="output">
-                <ul class="ingredient-container">
+            <div class="ingredient-list" id="ing-output">
+                <ul class="ingredient-container" id="ingredient-container">
                     <!-- <li>
                         <div class="item" id="test">
                             <a href="javascript:void(0)" class="remove" title="Remove">×</a>
@@ -212,11 +212,17 @@
             container.appendChild(ing);
         }
 
-        reset1.addEventListener("click", clear);
-        function clear() {
+        reset1.addEventListener("click", clear1);
+        function clear1() {
             progress.style.width = "333px"
             while (ingredients.length) { ingredients.pop() }
-            document.getElementById("output").innerHTML = "";
+            document.getElementById("ingredient-container").innerHTML = "";
+        }
+        reset2.addEventListener("click", clear2);
+        function clear2() {
+            progress.style.width = "666px"
+            // while (ingredients.length) { ingredients.pop() }
+            // document.getElementById("ing-output").innerHTML = "";
         }
 
         function answerBoxTemplate(title, titleDesc) {
@@ -238,7 +244,8 @@
         submit.addEventListener("click", filterText);
         function filterText() {
             progress.style.width = "1000px";
-            document.getElementById("answer-box").innerHTML = ""
+            document.getElementById("answer-box").innerHTML = "";
+            // document.getElementById("answer-box").scrollIntoView;
             let results = { "ingredients": ingredients, "restrictions": [], "category": [], "time": [] };
 
             var vegetarian = document.getElementById("dietary-restrictions1");
