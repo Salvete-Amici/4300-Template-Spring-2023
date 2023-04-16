@@ -13,7 +13,7 @@ body{
     display: flex;
     flex-flow: column;
     width: 1000px;
-    height: 800px;
+    height: 600px;
     margin: 8% auto;
     background: #fff;
     border-radius: 5px;
@@ -73,6 +73,7 @@ form button {
     cursor: pointer;
 
 }
+
 
 .logo img{
     display: flex;
@@ -150,6 +151,10 @@ form button {
     /* width: 1000px; */
     margin-top:50px;
     margin: 8% auto;
+    /* padding: 5px 5px 5px 5px; */
+    padding-left: 5px;
+    /* padding-top: 5px;
+    padding-bottom: 5px; */
     background: #fff;
     border-radius: 5px;
     position: relative; 
@@ -178,19 +183,47 @@ ul.ingredient-container li {
     margin-right:10px;
 }
 
-ul.ingredient-container li a {
+ul.ingredient-container li button {
     /* content:"\f00d"; */
+    width: auto;
+    height: auto;
+    /* margin: 0 10px; */
+    background:#12bbd4;
+    border-radius: 30px;
+    border: 0;
+    outline: none;
+    text-align: center;
     color:#ffffff;
-    text-decoration:none;
-    padding-right: 5px;
+    margin-right: 0px;
+    
+    /* text-decoration:none; */
+    /* padding-right: 5px;
     padding-left: 5px;
-    padding-bottom: 3px;
-    margin-left:10px;
+    padding-bottom: 3px; */
+    /* padding-top: 2px; */
+    /* margin-bottom:10px; */
+    /* margin-left:10px; */
+    cursor: pointer;
     /* margin-top:20px; */
     
 }
-ul.ingredient-container li a:hover {
-    background-image: linear-gradient(rgba(0,0,0,0.1) 0 0);
+
+ul.ingredient-container li button::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+    content: "\f00d";
+}
+
+ul.ingredient-container li button:hover {
+    /* background-image: linear-gradient(rgba(0,0,0,0.1) 0 0); */
+    color: #ff0000;
   }
 
 ul.ingredient-container li .item {

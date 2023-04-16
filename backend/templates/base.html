@@ -12,7 +12,13 @@
     
     <div class="container">
         <!-- <form class="inputs" onsubmit="return false"> -->
-        <form id="form1">
+        <div class="step-row">
+            <div id="progress"></div>
+            <div class="step-col"><small>Step 1: Add Your Ingredients</small></div>
+            <div class="step-col"><small>Step 2: Add Your Preferences</small></div>
+            <div class="step-col"><small>Step 3: Explore New Recipes</small></div>
+        </div>
+        <form id="form1" onsubmit="return false;">
             <div class="logo">
                 <img src="/static/images/pantry-pal-logo.png">
             </div>
@@ -51,6 +57,9 @@
             </div>
         </form>
         <form id="form2" onsubmit="return false">
+            <!-- <div class="logo">
+                <img src="/static/images/pantry-pal-logo.png">
+            </div> -->
             <label for="mandatory">Choose Mandatory Ingredients:<br></label>
             <div class="mandatory" id="mandatory">
                 <ul class="mandatory-list" id="mandatory-list"></ul>
@@ -105,12 +114,7 @@
 
         </form>
 
-        <div class="step-row">
-            <div id="progress"></div>
-            <div class="step-col"><small>Step 1: Add Your Ingredients</small></div>
-            <div class="step-col"><small>Step 2: Add Your Preferences</small></div>
-            <div class="step-col"><small>Step 3: Explore New Recipes</small></div>
-        </div>
+        
 
     </div>
     <div id="answer-box">
@@ -124,6 +128,7 @@
     <script>
         
         var addIng = document.getElementById("add");
+        var addInput = document.querySelector("#input-ingredients");
         var reset1 = document.getElementById("reset1");
         var reset2 = document.getElementById("reset2");
         var submit = document.getElementById("submit");
@@ -132,11 +137,40 @@
         var next = document.getElementById("next");
         var back = document.getElementById("back");
         var progress = document.getElementById("progress");
+        
+
         const ingredients = [];
         const optional = [];
         const mandatory = [];
+        const removeBtns = [];
+        const ingList = document.getElementById("ing-output");
+
+        ingList.addEventListener("click", function(e) {
+            const tgt = e.target;
+            if (tgt.classList.contains("remove")) {
+                
+                let ing = tgt.closest("div").id;
+                let index = ingredients.findIndex(function(x) {
+                    return x == ing;
+                });
+                ingredients.splice(index, 1);
+                tgt.closest("li").remove();
+
+            }
+                    
+            
+        });
 
         addIng.addEventListener("click", add);
+        addInput.addEventListener("keypress", function(event) {
+            console.log("test");
+            if (event.key === "Enter") {
+                console.log("enter");
+                event.preventDefault();
+                addIng.click();
+
+            }
+        });
         function add() {
             var ingredient = document.getElementById("input-ingredients").value;
             ingredients.push(ingredient);
@@ -145,10 +179,9 @@
             var div = document.createElement("div");
             div.className = "item";
             div.id = ingredient;
-            var remove = document.createElement("a");
-            remove.href = "javascript:void(0)";
+            var remove = document.createElement("button");
             remove.className = "remove";
-            remove.innerText = "×";
+            remove.classList.add("remove");
             remove.title = "Remove";
             var label = document.createElement("label");
             label.htmlFor = ingredient;
@@ -156,12 +189,38 @@
             div.appendChild(remove);
             div.appendChild(label);
             li.appendChild(div);
+            
             container.appendChild(li);
+
             console.log(ingredients);
+            
+        
+
+            // console.log(removeBtns.length);
+            
+            
 
             document.getElementById("input-ingredients").value = "";
             
+
+            
+            
         }
+
+        // function checkRemove() {
+        //     for (var i = 0; i < removeBtns.length; i++) {
+        //         console.log(removeBtns.length);
+        //         removeBtns[i].addEventListener("click", delGrandparent(removeBtns[i]), false);
+        //     }
+        // }
+
+        
+
+        function delGrandparent(e) {
+            e.parentElement.parentElement.remove();
+        }
+
+        
 
         next.onclick = function() {
             form1.style.left = "-1000px";
@@ -196,6 +255,7 @@
 
         reset1.addEventListener("click", clear1);
         function clear1() {
+            console.log("reset1");
             progress.style.width = "333px"
             while (ingredients.length) { ingredients.pop() }
             while (mandatory.length) { mandatory.pop() }
@@ -229,9 +289,11 @@
 
         
 
-        function answerBoxTemplate(title, titleDesc) {
+        function answerBoxTemplate(title, titleDesc, link) {
             return `<div class=''>
-                <h3 class='recipe-title'>${title}</h3>
+                <a href=${link} id=${title}+"link" title=${title}>
+                    <h3 class='recipe-title'>${title}</h3>
+                </a>
                 <p class='recipe-desc'>${titleDesc}</p>
             </div>`
         }
@@ -247,6 +309,7 @@
 
         submit.addEventListener("click", filterText);
         function filterText() {
+            console.log("submit");
             progress.style.width = "1000px";
             document.getElementById("answer-box").innerHTML = "";
             // document.getElementById("answer-box").scrollIntoView;
@@ -296,7 +359,7 @@
                 .then((data) => data.forEach(row => {
 
                     let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr)
+                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.link)
                     document.getElementById("answer-box").appendChild(tempDiv)
                 }));
         }
