@@ -1,3 +1,4 @@
+import numpy as np
 import json
 import os
 import re
@@ -6,8 +7,6 @@ from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import numpy as np
 from nltk.stem import PorterStemmer
-stemmer=PorterStemmer()
-
 
 # ROOT_PATH for linking with all your files.
 # Feel free to use a config.py or settings.py with a global export variable
@@ -87,7 +86,7 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
     for posting in postings1:
         if category in recipe_dict[posting]['tags']:
             category_postings.append(posting)
-  
+
     time_postings = []
     for posting in category_postings:
         if time >= recipe_dict[posting]['minutes']:
@@ -96,7 +95,8 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
     similarity_ranking = []
     for posting in postings1:
         ingredients = recipe_dict[posting]['ingredients']
-        jaccard_sim = jaccard(list(set(query).union(set(optional))), ingredients)
+        jaccard_sim = jaccard(
+            list(set(query).union(set(optional))), ingredients)
         similarity_ranking.append((posting, jaccard_sim))
 
     similarity_ranking.sort(reverse=True, key=lambda x: x[1])
@@ -110,7 +110,8 @@ def preprocess(recipe_list):
     recipe_dictionary = {}
     for recipe in recipe_list:
         name = recipe["name"]
-        rating = [int(x) for x in recipe['rating'].split(',') if x.strip().isdigit()]
+        rating = [int(x) for x in recipe['rating'].split(',')
+                  if x.strip().isdigit()]
         recipe_dictionary[name] = {"id": recipe["id"], "minutes": int(recipe["minutes"]), "ingredients": clean(
             recipe["ingredients"]), "tags": clean(recipe["tags"]), "rating": rating}
     return recipe_dictionary
@@ -119,7 +120,7 @@ def preprocess(recipe_list):
 def inverted_index(recipe_dictionary):
     # Returns a dictionary mapping ingredient names to a list of recipes that contain that ingredient
     inverted_idx = {}
-    for name, info  in recipe_dictionary.items():
+    for name, info in recipe_dictionary.items():
         for ingredient in info["ingredients"]:
             ingredient = stemmer.stem(ingredient)
             if ingredient in inverted_idx:
@@ -182,7 +183,7 @@ def not_merge_postings(dish_list, allergen):
     merged = merge_postings(dish_list, allergen)
     new_list = dish_list.copy()
     for t in merged:
-      new_list.remove(t)
+        new_list.remove(t)
     return new_list
 
 # calculates the jaccard similarity between two ingredient lists
@@ -191,8 +192,9 @@ def not_merge_postings(dish_list, allergen):
 def jaccard(ingr_list1, ingr_list2):
     set1 = set([stemmer.stem(w.lower()) for w in ingr_list1])
     set2 = set([stemmer.stem(w.lower()) for w in ingr_list2])
-    if len(set.union(set1,set2)) == 0: return 0
-    return len(set.intersection(set1,set2))/len(set.union(set1,set2))
+    if len(set.union(set1, set2)) == 0:
+        return 0
+    return len(set.intersection(set1, set2))/len(set.union(set1, set2))
 
 
 def preprocessing(ingredients, optional, restrictions, category, time):
@@ -201,14 +203,15 @@ def preprocessing(ingredients, optional, restrictions, category, time):
     global aii
     if mapping is None:
         query_sql = f"""SELECT * FROM rep"""
-        keys = [ "id", "rating","name", "minutes", "tags", "ingredients"]
+        keys = ["id", "rating", "name", "minutes", "tags", "ingredients"]
         data = mysql_engine.query_selector(query_sql)
         zipping = [dict(zip(keys, i)) for i in data]
         # print(zipping[0])
         mapping = preprocess(zipping)
         ii = inverted_index(mapping)
         aii = allergy_inverted_index(mapping)
-    ranked = search_rank(ingredients, optional, restrictions, category, time, aii, ii, mapping)
+    ranked = search_rank(ingredients, optional, restrictions,
+                         category, time, aii, ii, mapping)
     output = []
     for rep in ranked:
         name = rep[0]
@@ -218,7 +221,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
     return json.dumps(output)
 
 
-#def edit_dist(query, ingredient):
+# def edit_dist(query, ingredient):
     #"Calculate the minimum edit distance between the query and an existing ingredient"
     #n_rows = len(query) + 1
     #n_cols = len(ingredient) + 1
@@ -229,12 +232,12 @@ def preprocessing(ingredients, optional, restrictions, category, time):
     #mat = np.zeros((n_rows, n_cols))
     #mat[0] = np.arange(n_cols)
     #mat[:, 0] = np.arange(n_rows)
-    #for i in range(1, n_rows):
-        #for j in range(1, n_cols):
-            #sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
-            #mat[i, j] = min(mat[i-1, j] + del_cost,
-                            #mat[i-1, j-1] + sub_cost, mat[i, j-1] + ins_cost)
-    #return mat[len(query), len(ingredient)]
+    # for i in range(1, n_rows):
+    # for j in range(1, n_cols):
+    #sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
+    # mat[i, j] = min(mat[i-1, j] + del_cost,
+    # mat[i-1, j-1] + sub_cost, mat[i, j-1] + ins_cost)
+    # return mat[len(query), len(ingredient)]
 
 
 @app.route("/")
