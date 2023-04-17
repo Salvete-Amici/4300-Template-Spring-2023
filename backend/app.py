@@ -5,6 +5,7 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
+import pickle 
 from nltk.stem import PorterStemmer
 stemmer = PorterStemmer()
 
@@ -26,8 +27,12 @@ mysql_engine = MySQLDatabaseHandler(
 # Path to init.sql file. This file can be replaced with your own file for testing on localhost, but do NOT move the init.sql file
 mysql_engine.load_file_into_db()
 
-app = Flask(__name__)
+app = Flask(__name__) 
 CORS(app)
+
+with open('pickled_dict.pickle', 'rb') as handle:
+    ml_output_dict = pickle.load(handle)
+
 
 # Sample search, the LIKE operator in this case is hard-coded,
 # but if you decide to use SQLAlchemy ORM framework,
@@ -225,6 +230,11 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         d = {"title": name, "descr": mapping[name]
              ["ingredients"], "link": URL + str(mapping[name]["id"]), 
                         "rating": np.round(get_rating(mapping, name),1)}
+        
+        re_id = mapping [name]["id"]
+        if re_id in ml_output_dict:
+            d['relevant_topic'] = ml_output_dict[re_id] 
+        
         output.append(d)
     return json.dumps(output)
 

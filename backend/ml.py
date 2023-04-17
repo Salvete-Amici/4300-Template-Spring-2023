@@ -3,6 +3,7 @@ import re
 import csv
 import gensim
 from gensim import corpora
+import pickle
 
 #read file
 df = pd.read_csv('interaction_subset.csv', usecols=['recipe_id','review'],quoting=csv.QUOTE_NONE)
@@ -87,7 +88,7 @@ def get_label(review):
   if max(topics_prob[0][1], topics_prob[1][1]) == topics_prob[0][1]:
     label = "simple and tasty"
   else:
-    label = "recipes you'll user over and over again"
+    label = "recipes you'll use over and over again"
   return label
 
 #dictionary of the format {id:(# of 1st-topic reviews, # of 2nd-topic reviews)}
@@ -96,8 +97,15 @@ for i in range(len(corpus)):
   label = get_label(corpus[i])
   review_labels[ids[i]] = [0,0]
   if label == "simple and tasty":
-    review_labels[ids[i]][0] += 1
+    review_labels[ids[i]][0] += 1 
   else: 
     review_labels[ids[i]][1] += 1
 
+for k in review_labels:
+  if max(review_labels[k][0], review_labels[k][1]) == review_labels[k][0]:
+    review_labels[k] == "simple and tasty"
+  else:
+    review_labels[k] == "recipes you'll use over and over again"
 
+with open('pickled_dict.pickle', 'wb') as handle:
+    pickle.dump(review_labels, handle, protocol=pickle.HIGHEST_PROTOCOL)
