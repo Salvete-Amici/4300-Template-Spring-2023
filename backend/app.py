@@ -7,6 +7,7 @@ from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import numpy as np
 from nltk.stem import PorterStemmer
+stemmer = PorterStemmer()
 
 # ROOT_PATH for linking with all your files.
 # Feel free to use a config.py or settings.py with a global export variable
