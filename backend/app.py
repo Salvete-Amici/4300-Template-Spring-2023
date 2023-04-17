@@ -97,7 +97,8 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
         ingredients = recipe_dict[posting]['ingredients']
         jaccard_sim = jaccard(
             list(set(query).union(set(optional))), ingredients)
-        similarity_ranking.append((posting, jaccard_sim))
+        rating_score = get_rating(recipe_dict, posting)/5
+        similarity_ranking.append((posting, jaccard_sim+rating_score))
 
     similarity_ranking.sort(reverse=True, key=lambda x: x[1])
     boundary = min(20, len(similarity_ranking))
@@ -198,10 +199,10 @@ def jaccard(ingr_list1, ingr_list2):
         return 0
     return len(set.intersection(set1, set2))/len(set.union(set1, set2))
 
-def get_rating(name):
+def get_rating(dict, name):
     # s = len(mapping[name]["rating"])
-    avg = np.mean(mapping[name]["rating"])
-    return np.round(avg,1)
+    avg = np.mean(dict[name]["rating"])
+    return avg
 
 def preprocessing(ingredients, optional, restrictions, category, time):
     global mapping
@@ -223,7 +224,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         name = rep[0]
         d = {"title": name, "descr": mapping[name]
              ["ingredients"], "link": URL + str(mapping[name]["id"]), 
-                                                "rating": get_rating(name)}
+                                                "rating": np.round(get_rating(mapping, name),1)}
         output.append(d)
     return json.dumps(output)
 
@@ -291,4 +292,4 @@ def recipe_search():
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
-# app.run(debug=True)
+app.run(debug=True)
