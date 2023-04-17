@@ -5,7 +5,6 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-import numpy as np
 from nltk.stem import PorterStemmer
 stemmer = PorterStemmer()
 
