@@ -4,9 +4,10 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
+import numpy as np
 from nltk.stem import PorterStemmer
 stemmer=PorterStemmer()
-import numpy as np
+
 
 # ROOT_PATH for linking with all your files.
 # Feel free to use a config.py or settings.py with a global export variable
@@ -278,4 +279,4 @@ def recipe_search():
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
-app.run(debug=True)
+# app.run(debug=True)

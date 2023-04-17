@@ -1,19 +1,20 @@
-*{
+* {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: verdana;
 }
-body{
-    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(../static/images/fridge.png);
+
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(../static/images/fridge.png);
     background-position: center;
     background-size: cover;
 }
 
-.container{
+.container {
     display: flex;
     flex-flow: column;
     width: 1000px;
-    height: 600px;
+    height: 500px;
     margin: 8% auto;
     background: #fff;
     border-radius: 5px;
@@ -21,7 +22,7 @@ body{
     overflow: hidden;
 }
 
-h1{
+h1 {
     text-align: center;
     margin-bottom: 40px;
     color: #777;
@@ -29,15 +30,16 @@ h1{
 
 
 
-.container form{
+.container form {
     width: 900px;
     position: absolute;
     top: 100px;
-    left:40px;
+    left: 40px;
     transition: 0.5s;
 
 }
-form input{
+
+form input {
     width: 70%;
     padding: 10px 5px;
     margin: 2px 0;
@@ -54,7 +56,7 @@ form input{
     position: center;
 } */
 
-.btn-box{
+.btn-box {
     width: 100%;
     margin: 30px auto;
     text-align: center;
@@ -69,18 +71,18 @@ form button {
     border-radius: 30px;
     border: 0;
     outline: none;
-    color:#fff;
+    color: #fff;
     cursor: pointer;
 
 }
 
 
-.logo img{
+.logo img {
     display: flex;
     width: 500px;
     height: auto;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
     position: center;
 }
 
@@ -91,24 +93,24 @@ form button {
 
 
 
-.step-row{
+.step-row {
     width: 1000px;
     height: 60px;
     margin: 0 auto;
     display: flex;
-    align-items:center;
+    align-items: center;
     box-shadow: 0 -1px 5px -1px #000;
     position: relative;
 }
 
-.step-col{
+.step-col {
     width: 333px;
-    text-align:center;
-    color:#333;
+    text-align: center;
+    color: #333;
     position: relative;
 }
 
-#progress{
+#progress {
     position: absolute;
     height: 100%;
     width: 333px;
@@ -116,7 +118,7 @@ form button {
     transition: 1s;
 }
 
-#progress::after{
+#progress::after {
     content: '';
     height: 0;
     width: 0;
@@ -127,6 +129,7 @@ form button {
     top: 0;
     border-left: 30px solid #096A2E;
 }
+
 /* .answer-box{
     width: 1000px;
     height: 1000px;
@@ -147,23 +150,37 @@ form button {
 } */
 
 
-#answer-box{
+#answer-box {
     /* width: 1000px; */
-    margin-top:50px;
+    margin-top: 20px;
     margin: 8% auto;
     /* padding: 5px 5px 5px 5px; */
     padding-left: 5px;
     /* padding-top: 5px;
     padding-bottom: 5px; */
-    background: #fff;
+    /* background: #fff; */
     border-radius: 5px;
-    position: relative; 
-}
-.recipe-title{
-    font-family: 'Kanit', sans-serif;
+    position: relative;
 }
 
-.recipe-desc{
+.recipe-box {
+    width: 980px;
+    margin: auto;
+    margin-top: 20px;
+    padding: 8px;
+    background-color: white;
+    border-radius: 10px;
+    border: 7px solid #8ABE53;
+}
+
+.recipe-title {
+    font-family: 'Kanit', sans-serif;
+    padding-bottom: 10px;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.recipe-desc {
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -180,7 +197,7 @@ ul.ingredient-container {
 
 ul.ingredient-container li {
     display: inline;
-    margin-right:10px;
+    margin-right: 10px;
 }
 
 ul.ingredient-container li button {
@@ -188,14 +205,14 @@ ul.ingredient-container li button {
     width: auto;
     height: auto;
     /* margin: 0 10px; */
-    background:#12bbd4;
+    background: #12bbd4;
     border-radius: 30px;
     border: 0;
     outline: none;
     text-align: center;
-    color:#ffffff;
+    color: #ffffff;
     margin-right: 0px;
-    
+
     /* text-decoration:none; */
     /* padding-right: 5px;
     padding-left: 5px;
@@ -205,7 +222,7 @@ ul.ingredient-container li button {
     /* margin-left:10px; */
     cursor: pointer;
     /* margin-top:20px; */
-    
+
 }
 
 ul.ingredient-container li button::before {
@@ -224,13 +241,13 @@ ul.ingredient-container li button::before {
 ul.ingredient-container li button:hover {
     /* background-image: linear-gradient(rgba(0,0,0,0.1) 0 0); */
     color: #ff0000;
-  }
+}
 
 ul.ingredient-container li .item {
     border: 2px solid #1bdbf8;
     background-color: #12bbd4;
     border-radius: 25px;
-    display:inline-block;
+    display: inline-block;
     /* height: 35px; */
 
 }
@@ -259,11 +276,13 @@ ul.mandatory-list {
     list-style: none;
     padding: 20px;
 }
-ul.mandatory-list li{
-  display: inline;
-  margin-right:10px;
+
+ul.mandatory-list li {
+    display: inline;
+    margin-right: 10px;
 }
-ul.mandatory-list li label{
+
+ul.mandatory-list li label {
     display: inline-block;
     background-color: rgba(255, 255, 255, .9);
     border: 2px solid rgba(139, 139, 139, .3);
@@ -299,13 +318,13 @@ ul.mandatory-list li label::before {
     transition: transform .3s ease-in-out;
 }
 
-ul.mandatory-list li input[type="checkbox"]:checked + label::before {
+ul.mandatory-list li input[type="checkbox"]:checked+label::before {
     content: "\f00c";
     transform: rotate(-360deg);
     transition: transform .3s ease-in-out;
 }
 
-ul.mandatory-list li input[type="checkbox"]:checked + label {
+ul.mandatory-list li input[type="checkbox"]:checked+label {
     border: 2px solid #1bdbf8;
     background-color: #12bbd4;
     color: #fff;
@@ -313,17 +332,19 @@ ul.mandatory-list li input[type="checkbox"]:checked + label {
 }
 
 ul.mandatory-list li input[type="checkbox"] {
-  display: absolute;
+    display: absolute;
 }
+
 ul.mandatory-list li input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
+    position: absolute;
+    opacity: 0;
 }
+
 /* ul.mandatory-list li input[type="checkbox"]:focus + label {
   border: 2px solid #e9a1ff;
 } */
 
-.lists{
+.lists {
     display: flex;
     flex: 1;
     width: 100%;
@@ -334,28 +355,30 @@ ul.mandatory-list li input[type="checkbox"] {
     position:absolute; */
 
 }
+
 .lists .list {
     display: flex;
     flex-flow: column;
-    flex:1;
+    flex: 1;
     width: 100;
     min-width: 300px;
     max-width: 400px;
     height: 100%;
     min-height: 150px;
-    background-color:#dddddd;
+    background-color: #dddddd;
     border-radius: 8px;
     margin: 0 15px;
     padding: 8px;
     transition: all 0.2s linear;
 }
+
 .lists .list .list-item {
-    background-color:#096A2E;
+    background-color: #096A2E;
     border-radius: 8px;
     padding: 15px 20px;
     text-align: center;
     margin: 4px 0px;
-    color:#fff;
+    color: #fff;
 
 }
 
@@ -363,7 +386,7 @@ ul.mandatory-list li input[type="checkbox"] {
     border: solid 1px #777;
     zoom: 1;
 } */
-.ingredient-element{
+.ingredient-element {
     width: 110px;
     height: 35px;
     /* float: left; */
@@ -372,7 +395,7 @@ ul.mandatory-list li input[type="checkbox"] {
     border-radius: 30px;
     border: 0;
     outline: none;
-    color:#fff;
+    color: #fff;
     cursor: pointer;
 
 }
