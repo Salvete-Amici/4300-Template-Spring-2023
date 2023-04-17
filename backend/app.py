@@ -77,7 +77,9 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
     for allergen in allergens:
         if allergen == "":
             break
+        print(allergen)
         allergen_postings = allergy_inverted_index[allergen]
+        print(allergen_postings)
         postings1 = not_merge_postings(postings1, allergen_postings)
 
     category_postings = []
@@ -107,8 +109,9 @@ def preprocess(recipe_list):
     recipe_dictionary = {}
     for recipe in recipe_list:
         name = recipe["name"]
+        rating = [int(x) for x in recipe['rating'].split(',') if x.strip().isdigit()]
         recipe_dictionary[name] = {"id": recipe["id"], "minutes": int(recipe["minutes"]), "ingredients": clean(
-            recipe["ingredients"]), "tags": clean(recipe["tags"])}
+            recipe["ingredients"]), "tags": clean(recipe["tags"]), "rating": rating}
     return recipe_dictionary
 
 
@@ -174,7 +177,7 @@ def merge_postings(postings1, postings2):
 # dish_list is list of strings, allergen is list of strings
 # returns a list containing all ingredients in dish_list that does not contain allergen
 def not_merge_postings(dish_list, allergen):
-    dish_list = [stemmer.stem(w.lower()) for w in dish_list]
+    # dish_list = [stemmer.stem(w.lower()) for w in dish_list]
     merged = merge_postings(dish_list, allergen)
     new_list = dish_list.copy()
     for t in merged:
@@ -196,10 +199,11 @@ def preprocessing(ingredients, optional, restrictions, category, time):
     global ii
     global aii
     if mapping is None:
-        query_sql = f"""SELECT * FROM rep2"""
-        keys = ["name", "id", "minutes", "tags", "ingredients"]
+        query_sql = f"""SELECT * FROM rep"""
+        keys = [ "id", "rating","name", "minutes", "tags", "ingredients"]
         data = mysql_engine.query_selector(query_sql)
         zipping = [dict(zip(keys, i)) for i in data]
+        # print(zipping[0])
         mapping = preprocess(zipping)
         ii = inverted_index(mapping)
         aii = allergy_inverted_index(mapping)
@@ -274,4 +278,4 @@ def recipe_search():
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
-# app.run(debug=True)
+app.run(debug=True)
