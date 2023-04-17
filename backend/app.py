@@ -224,7 +224,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         name = rep[0]
         d = {"title": name, "descr": mapping[name]
              ["ingredients"], "link": URL + str(mapping[name]["id"]), 
-                                                "rating": np.round(get_rating(mapping, name),1)}
+                        "rating": np.round(get_rating(mapping, name),1)}
         output.append(d)
     return json.dumps(output)
 
@@ -292,4 +292,4 @@ def recipe_search():
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
-app.run(debug=True)
+# app.run(debug=True)
