@@ -291,4 +291,4 @@ def recipe_search():
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
-app.run(debug=True)
+# app.run(debug=True)
