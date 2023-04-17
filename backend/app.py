@@ -4,7 +4,9 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-#import numpy as np
+from nltk.stem import PorterStemmer
+stemmer=PorterStemmer()
+import numpy as np
 
 # ROOT_PATH for linking with all your files.
 # Feel free to use a config.py or settings.py with a global export variable
@@ -62,14 +64,14 @@ allergies["vegan"] = allergies["vegetarian"] + \
     allergies["dairy"] + allergies["egg"]
 
 
-def search_rank(query, allergens, allergy_inverted_index, inverted_index, recipe_dict):
+def search_rank(query, optional, allergens, category, time, allergy_inverted_index, inverted_index, recipe_dict):
     # query is a list of strings, allergens is a list of strings, inverted_index is
     # a dictionary mapping ingredients to which recipes they appear in. recipe_dict
     # is a dictionary mapping recipe names to id, ingredients, and tags.
     # Returns a ranked list of the top 20 recipes
-    postings1 = inverted_index[query[0]]
+    postings1 = inverted_index[stemmer.stem(query[0].lower())]
     for ingredient in query:
-        postings2 = inverted_index[ingredient]
+        postings2 = inverted_index[stemmer.stem(ingredient.lower())]
         postings1 = merge_postings(postings1, postings2)
 
     for allergen in allergens:
@@ -78,10 +80,20 @@ def search_rank(query, allergens, allergy_inverted_index, inverted_index, recipe
         allergen_postings = allergy_inverted_index[allergen]
         postings1 = not_merge_postings(postings1, allergen_postings)
 
+    category_postings = []
+    for posting in postings1:
+        if category in recipe_dict[posting]['tags']:
+            category_postings.append(posting)
+  
+    time_postings = []
+    for posting in category_postings:
+        if time >= recipe_dict[posting]['minutes']:
+            time_postings.append(posting)
+
     similarity_ranking = []
     for posting in postings1:
         ingredients = recipe_dict[posting]['ingredients']
-        jaccard_sim = jaccard(query, ingredients)
+        jaccard_sim = jaccard(list(set(query).union(set(optional))), ingredients)
         similarity_ranking.append((posting, jaccard_sim))
 
     similarity_ranking.sort(reverse=True, key=lambda x: x[1])
@@ -95,7 +107,7 @@ def preprocess(recipe_list):
     recipe_dictionary = {}
     for recipe in recipe_list:
         name = recipe["name"]
-        recipe_dictionary[name] = {"id": recipe["id"], "ingredients": clean(
+        recipe_dictionary[name] = {"id": recipe["id"], "minutes": int(recipe["minutes"]), "ingredients": clean(
             recipe["ingredients"]), "tags": clean(recipe["tags"])}
     return recipe_dictionary
 
@@ -103,8 +115,9 @@ def preprocess(recipe_list):
 def inverted_index(recipe_dictionary):
     # Returns a dictionary mapping ingredient names to a list of recipes that contain that ingredient
     inverted_idx = {}
-    for name, info in recipe_dictionary.items():
+    for name, info  in recipe_dictionary.items():
         for ingredient in info["ingredients"]:
+            ingredient = stemmer.stem(ingredient)
             if ingredient in inverted_idx:
                 inverted_idx[ingredient].append(name)
             else:
@@ -161,25 +174,24 @@ def merge_postings(postings1, postings2):
 # dish_list is list of strings, allergen is list of strings
 # returns a list containing all ingredients in dish_list that does not contain allergen
 def not_merge_postings(dish_list, allergen):
+    dish_list = [stemmer.stem(w.lower()) for w in dish_list]
     merged = merge_postings(dish_list, allergen)
     new_list = dish_list.copy()
     for t in merged:
-        new_list.remove(t)
+      new_list.remove(t)
     return new_list
 
 # calculates the jaccard similarity between two ingredient lists
 
 
 def jaccard(ingr_list1, ingr_list2):
-    set1 = set(ingr_list1)
-    set2 = set(ingr_list2)
-    if len(set.union(set1, set2)) == 0:
-        return 0
-    return len(set.intersection(set1, set2))/len(set.union(set1, set2))
+    set1 = set([stemmer.stem(w.lower()) for w in ingr_list1])
+    set2 = set([stemmer.stem(w.lower()) for w in ingr_list2])
+    if len(set.union(set1,set2)) == 0: return 0
+    return len(set.intersection(set1,set2))/len(set.union(set1,set2))
 
 
-def preprocessing(ingredients, restrictions, category, time):
-    # currently search does not use category or time
+def preprocessing(ingredients, optional, restrictions, category, time):
     global mapping
     global ii
     global aii
@@ -191,7 +203,7 @@ def preprocessing(ingredients, restrictions, category, time):
         mapping = preprocess(zipping)
         ii = inverted_index(mapping)
         aii = allergy_inverted_index(mapping)
-    ranked = search_rank(ingredients, restrictions, aii, ii, mapping)
+    ranked = search_rank(ingredients, optional, restrictions, category, time, aii, ii, mapping)
     output = []
     for rep in ranked:
         name = rep[0]
@@ -234,7 +246,7 @@ def clean_ingredient(str):
 def recipe_search():
     # need to first validate ingredients
     # destem ingredients (to deal with plural ingredients)
-    ingredients = request.args.get("ingredients")
+    ingredients = request.args.get("mandatory")
     ingr = ingredients.split(",")
     # cleaning ingredients
     cleaned_ingr = []
@@ -246,11 +258,21 @@ def recipe_search():
     dupe = set(cleaned_ingr)
     no_dupe_ingr = list(dupe)
 
+    # clean optional ingredients
+    optional_ingredients = request.args.get("optional")
+    optional = optional_ingredients.split(",")
+    cleaned_optional = []
+    for i in optional:
+        for cleaned in clean_ingredient(i):
+            cleaned_optional.append(cleaned.lower())
+
+    no_dupe_optional = list(set(cleaned_optional))
+
     restrictions = request.args.get("restrictions")
     restrict = restrictions.split(",")
     category = request.args.get("category")
     time = request.args.get("time")
-    return preprocessing(no_dupe_ingr, restrict, category, time)
+    return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
 
 # app.run(debug=True)
