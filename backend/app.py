@@ -77,9 +77,9 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
     for allergen in allergens:
         if allergen == "":
             break
-        print(allergen)
+        # print(allergen)
         allergen_postings = allergy_inverted_index[allergen]
-        print(allergen_postings)
+        # print(allergen_postings)
         postings1 = not_merge_postings(postings1, allergen_postings)
 
     category_postings = []
