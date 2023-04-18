@@ -337,7 +337,7 @@
                 .then((data) => data.forEach(row => {
 
                     let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.link,row.rating, row.relevant_topic)
+                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.link,row.rating)
                     document.getElementById("answer-box").appendChild(tempDiv)
                 }));
         }
