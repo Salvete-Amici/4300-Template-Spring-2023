@@ -114,6 +114,7 @@
         var next = document.getElementById("next");
         var back = document.getElementById("back");
         var progress = document.getElementById("progress");
+
         
 
         const ingredients = [];
@@ -267,14 +268,23 @@
         
 
         function answerBoxTemplate(title, titleDesc, link, rating) {
-            return `<div class='recipe-box'>
+            return
+            `<div class='recipe-box'>
                 <a href=${link} id=${title}+"link" title=${title}>
                     <h3 style = 'font-family: verdana' class='recipe-title'>${title}</h3>
                 </a>
                 <p style = 'font-family: verdana' class='recipe-desc'>${"Rating:"+ rating}</p>
                 <p style = 'font-family: verdana' class='recipe-desc'>${"Ingredients:" + titleDesc}</p>
             </div>`
+
         }
+
+        function noResultTemplate(msg) {
+          return `<div >
+                  <h1 style="color:white;">${msg}</h1>
+              </div>`;
+        }
+
 
         function getSelectedText(elementId) {
             var elt = document.getElementById(elementId);
@@ -335,9 +345,10 @@
             fetch("/recipes?" + new URLSearchParams(results).toString())
                 .then((response) => response.json())
                 .then((data) => data.forEach(row => {
-
                     let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.link,row.rating)
+                    tempDiv.innerHTML = row.rating ?
+                    answerBoxTemplate(row.title, row.descr, row.link,row.rating)
+                    : noResultTemplate(row.title)
                     document.getElementById("answer-box").appendChild(tempDiv)
                 }));
         }

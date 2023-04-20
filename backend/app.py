@@ -236,6 +236,8 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         #     d['relevant_topic'] = ml_output_dict[re_id] 
         
         output.append(d)
+    if len(output) == 0:
+        output.append({"title": "No recipe found."})
     return json.dumps(output)
 
 
@@ -302,4 +304,4 @@ def recipe_search():
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
-app.run(debug=True)
+# app.run(debug=True)
