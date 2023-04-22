@@ -121,6 +121,7 @@
         const optional = [];
         const mandatory = [];
         const removeBtns = [];
+        const delIngredients = [];
         const ingList = document.getElementById("ing-output");
 
         ingList.addEventListener("click", function(e) {
@@ -131,7 +132,10 @@
                 let index = ingredients.findIndex(function(x) {
                     return x == ing;
                 });
-                ingredients.splice(index, 1);
+                let delIng = ingredients.splice(index, 1)
+                delIngredients.push(delIng[0]);
+                console.log(delIngredients);
+                console.log(ingredients);
                 tgt.closest("li").remove();
 
             }
@@ -210,7 +214,7 @@
                     var li = document.createElement("li");
                     var input = document.createElement("input");
                     input.type = "checkbox";
-                    input.id = "checkbox"+i;
+                    input.id = ingredients[i] + "-checkbox";
                     input.name = "ingredient";
                     input.value = ingredients[i];
                     var label = document.createElement("label");
@@ -222,6 +226,14 @@
                     optional.push(ingredients[i]);
                 }
 
+            }
+            while (delIngredients.length) {
+                if (optional.includes(delIngredients[0]) || mandatory.includes(delIngredients[0])) {
+                    var e = document.getElementById(delIngredients[0] + "-checkbox")
+                    var cont = document.querySelector(".mandatory-list");
+                    e.parentElement.remove();
+                }
+                delIngredients.pop();
             }
             // console.log(ingredients);
         }
