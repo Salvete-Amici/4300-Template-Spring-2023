@@ -5,7 +5,7 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-#import pickle 
+#import pickle
 from nltk.stem import PorterStemmer
 stemmer = PorterStemmer()
 
@@ -27,7 +27,7 @@ mysql_engine = MySQLDatabaseHandler(
 # Path to init.sql file. This file can be replaced with your own file for testing on localhost, but do NOT move the init.sql file
 mysql_engine.load_file_into_db()
 
-app = Flask(__name__) 
+app = Flask(__name__)
 CORS(app)
 
 # with open('pickled_dict.pickle', 'rb') as handle:
@@ -204,10 +204,12 @@ def jaccard(ingr_list1, ingr_list2):
         return 0
     return len(set.intersection(set1, set2))/len(set.union(set1, set2))
 
+
 def get_rating(dict, name):
     # s = len(mapping[name]["rating"])
     avg = np.mean(dict[name]["rating"])
     return avg
+
 
 def preprocessing(ingredients, optional, restrictions, category, time):
     global mapping
@@ -222,25 +224,29 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         mapping = preprocess(zipping)
         ii = inverted_index(mapping)
         aii = allergy_inverted_index(mapping)
+
+    output = []
+    for i in ingredients:
+        if i not in ii:
+            output.append({"title": "Ingredient '" + i + "' not found"})
+            return json.dumps(output)
     ranked = search_rank(ingredients, optional, restrictions,
                          category, time, aii, ii, mapping)
-    output = []
+
     for rep in ranked:
         name = rep[0]
         d = {"title": name, "descr": mapping[name]
-             ["ingredients"], "link": URL + str(mapping[name]["id"]), 
-                        "rating": np.round(get_rating(mapping, name),1)}
-        
+             ["ingredients"], "link": URL + str(mapping[name]["id"]),
+             "rating": np.round(get_rating(mapping, name), 1)}
+
         # re_id = mapping [name]["id"]
         # if re_id in ml_output_dict:
-        #     d['relevant_topic'] = ml_output_dict[re_id] 
-        
+        #     d['relevant_topic'] = ml_output_dict[re_id]
+
         output.append(d)
     if len(output) == 0:
         output.append({"title": "No recipe found."})
     return json.dumps(output)
-
-
 
 
 # def edit_dist(query, ingredient):
@@ -303,5 +309,6 @@ def recipe_search():
     category = request.args.get("category")
     time = request.args.get("time")
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
+
 
 # app.run(debug=True)
