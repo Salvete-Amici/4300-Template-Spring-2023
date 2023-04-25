@@ -68,13 +68,20 @@ allergies = {"nuts": ["peanut", "peanut oil", "hazelnut",
 allergies["vegan"] = allergies["vegetarian"] + \
     allergies["dairy"] + allergies["egg"]
 
+time_lookup = {"Under 15 minutes" : 15, "Under 30 minutes": 30, "Under 1 hour": 60, "1-2 hours" : 120, "2+ hours" : 10000}
 
-def search_rank(query, optional, allergens, category, time, allergy_inverted_index, inverted_index, recipe_dict):
+category_lookup = {"Main Course" : ["main-dish", "soups-stews", "sandwiches", "breakfast"], "Appetizer and Snacks" : ["appetizers", "side-dishes", "salads", "sauces", "condiments-etc"], "Dessert" : "desserts"}
+
+def search_rank(query, optional, allergens, category, time, allergy_inverted_index, inverted_index, recipe_dict, time_lookup, category_lookup):
     # query is a list of strings, allergens is a list of strings, inverted_index is
     # a dictionary mapping ingredients to which recipes they appear in. recipe_dict
     # is a dictionary mapping recipe names to id, ingredients, and tags.
     # Returns a ranked list of the top 20 recipes
-    postings1 = inverted_index[stemmer.stem(query[0].lower())]
+    if len(query) == 0:
+        postings1 = list(recipe_dict.keys())
+    else:
+        postings1 = inverted_index[stemmer.stem(query[0].lower())]
+
     for ingredient in query:
         postings2 = inverted_index[stemmer.stem(ingredient.lower())]
         postings1 = merge_postings(postings1, postings2)
@@ -86,19 +93,25 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
         allergen_postings = allergy_inverted_index[allergen]
         # print(allergen_postings)
         postings1 = not_merge_postings(postings1, allergen_postings)
+  
+  category_postings = []
+  for posting in postings1:
+      if category == "":
+          category_postings = postings1
+          break
+      if len(set(category_lookup[category]).intersection(set(recipe_dict[posting]['tags']))) > 0:
+          category_postings.append(posting)
 
-    category_postings = []
-    for posting in postings1:
-        if category in recipe_dict[posting]['tags']:
-            category_postings.append(posting)
-
-    time_postings = []
-    for posting in category_postings:
-        if time >= recipe_dict[posting]['minutes']:
-            time_postings.append(posting)
+  time_postings = []
+  for posting in category_postings:
+      if time == "":
+          time_postings = category_postings
+          break
+      if time_lookup[time] >= recipe_dict[posting]['minutes']:
+          time_postings.append(posting)
 
     similarity_ranking = []
-    for posting in postings1:
+    for posting in time_postings:
         ingredients = recipe_dict[posting]['ingredients']
         jaccard_sim = jaccard(
             list(set(query).union(set(optional))), ingredients)
@@ -215,6 +228,8 @@ def preprocessing(ingredients, optional, restrictions, category, time):
     global mapping
     global ii
     global aii
+    global time_lookup
+    global category_lookup
     if mapping is None:
         query_sql = f"""SELECT * FROM rep"""
         keys = ["id", "rating", "name", "minutes", "tags", "ingredients"]
@@ -231,7 +246,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
             output.append({"title": "Ingredient '" + i + "' not found"})
             return json.dumps(output)
     ranked = search_rank(ingredients, optional, restrictions,
-                         category, time, aii, ii, mapping)
+                         category, time, aii, ii, mapping, time_lookup, category_lookup)
 
     for rep in ranked:
         name = rep[0]
