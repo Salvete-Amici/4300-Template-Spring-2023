@@ -238,8 +238,11 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         aii = allergy_inverted_index(mapping)
 
     output = []
+    if len(ingredients) ==0 and len(optional) == 0:
+        output.append({"title": "No proper ingredient given."})
+        return json.dumps(output)
     for i in ingredients:
-        if i not in ii:
+        if i not in ii.keys():
             output.append({"title": "Ingredient '" + i + "' not found"})
             return json.dumps(output)
     ranked = search_rank(ingredients, optional, restrictions,
@@ -285,7 +288,7 @@ def home():
 
 
 def clean_ingredient(str):
-    cleaned = re.findall(r"[a-zA-Z ]+", str)
+    cleaned = re.findall(r"[a-zA-Z]+", str)
     return cleaned
 
 
@@ -299,7 +302,7 @@ def recipe_search():
     cleaned_ingr = []
     for i in ingr:
         for cleaned in clean_ingredient(i):
-            cleaned_ingr.append(cleaned.lower())
+            cleaned_ingr.append(stemmer.stem(cleaned.lower()))
 
     # removing duplicates
     dupe = set(cleaned_ingr)
@@ -311,7 +314,7 @@ def recipe_search():
     cleaned_optional = []
     for i in optional:
         for cleaned in clean_ingredient(i):
-            cleaned_optional.append(cleaned.lower())
+            cleaned_optional.append(stemmer.stem(cleaned.lower()))
 
     no_dupe_optional = list(set(cleaned_optional))
 
