@@ -89,12 +89,9 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
     for allergen in allergens:
         if allergen == "":
             break
-        # print(allergen)
         allergen_postings = allergy_inverted_index[allergen]
-        # print(allergen_postings)
         postings1 = not_merge_postings(postings1, allergen_postings)
   
-    # print(postings1)
     category_postings = []
     for posting in postings1:
         if category == "":
@@ -103,7 +100,6 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
         if len(set(category_lookup[category]).intersection(set(recipe_dict[posting]['tags']))) > 0:
             category_postings.append(posting)
 
-    # print(category_postings)
     time_postings = []
     for posting in category_postings:
         if time == "":
@@ -237,7 +233,6 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         keys = ["id", "rating", "name", "minutes", "tags", "ingredients"]
         data = mysql_engine.query_selector(query_sql)
         zipping = [dict(zip(keys, i)) for i in data]
-        # print(zipping[0])
         mapping = preprocess(zipping)
         ii = inverted_index(mapping)
         aii = allergy_inverted_index(mapping)
@@ -249,7 +244,6 @@ def preprocessing(ingredients, optional, restrictions, category, time):
             return json.dumps(output)
     ranked = search_rank(ingredients, optional, restrictions,
                          category, time, aii, ii, mapping, time_lookup, category_lookup)
-    # print(ranked)
     for rep in ranked:
         name = rep[0]
         d = {"title": name, "descr": mapping[name]
@@ -263,7 +257,6 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         output.append(d)
     if len(output) == 0:
         output.append({"title": "No recipe found."})
-    # print(output)
     return json.dumps(output)
 
 
