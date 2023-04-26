@@ -94,21 +94,21 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
         # print(allergen_postings)
         postings1 = not_merge_postings(postings1, allergen_postings)
   
-  category_postings = []
-  for posting in postings1:
+    category_postings = []
+    for posting in postings1:
       if category == "":
           category_postings = postings1
           break
       if len(set(category_lookup[category]).intersection(set(recipe_dict[posting]['tags']))) > 0:
           category_postings.append(posting)
 
-  time_postings = []
-  for posting in category_postings:
-      if time == "":
-          time_postings = category_postings
-          break
-      if time_lookup[time] >= recipe_dict[posting]['minutes']:
-          time_postings.append(posting)
+    time_postings = []
+    for posting in category_postings:
+        if time == "":
+            time_postings = category_postings
+            break
+        if time_lookup[time] >= recipe_dict[posting]['minutes']:
+            time_postings.append(posting)
 
     similarity_ranking = []
     for posting in time_postings:
