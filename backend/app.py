@@ -70,7 +70,7 @@ allergies["vegan"] = allergies["vegetarian"] + \
 
 time_lookup = {"Under 15 minutes" : 15, "Under 30 minutes": 30, "Under 1 hour": 60, "1-2 hours" : 120, "2+ hours" : 10000}
 
-category_lookup = {"Main Course" : ["main-dish", "soups-stews", "sandwiches", "breakfast"], "Appetizer and Snacks" : ["appetizers", "side-dishes", "salads", "sauces", "condiments-etc"], "Dessert" : "desserts"}
+category_lookup = {"Main Course" : ["main-dish", "soups-stews", "sandwiches", "breakfast"], "Appetizer and Snack" : ["appetizers", "side-dishes", "salads", "sauces", "condiments-etc"], "Dessert" : ["desserts"]}
 
 def search_rank(query, optional, allergens, category, time, allergy_inverted_index, inverted_index, recipe_dict, time_lookup, category_lookup):
     # query is a list of strings, allergens is a list of strings, inverted_index is
@@ -94,21 +94,23 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
         # print(allergen_postings)
         postings1 = not_merge_postings(postings1, allergen_postings)
   
-  category_postings = []
-  for posting in postings1:
-      if category == "":
-          category_postings = postings1
-          break
-      if len(set(category_lookup[category]).intersection(set(recipe_dict[posting]['tags']))) > 0:
-          category_postings.append(posting)
+    # print(postings1)
+    category_postings = []
+    for posting in postings1:
+        if category == "":
+            category_postings = postings1
+            break
+        if len(set(category_lookup[category]).intersection(set(recipe_dict[posting]['tags']))) > 0:
+            category_postings.append(posting)
 
-  time_postings = []
-  for posting in category_postings:
-      if time == "":
-          time_postings = category_postings
-          break
-      if time_lookup[time] >= recipe_dict[posting]['minutes']:
-          time_postings.append(posting)
+    # print(category_postings)
+    time_postings = []
+    for posting in category_postings:
+        if time == "":
+            time_postings = category_postings
+            break
+        if time_lookup[time] >= recipe_dict[posting]['minutes']:
+            time_postings.append(posting)
 
     similarity_ranking = []
     for posting in time_postings:
@@ -247,7 +249,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
             return json.dumps(output)
     ranked = search_rank(ingredients, optional, restrictions,
                          category, time, aii, ii, mapping, time_lookup, category_lookup)
-
+    # print(ranked)
     for rep in ranked:
         name = rep[0]
         d = {"title": name, "descr": mapping[name]
@@ -261,6 +263,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         output.append(d)
     if len(output) == 0:
         output.append({"title": "No recipe found."})
+    # print(output)
     return json.dumps(output)
 
 
