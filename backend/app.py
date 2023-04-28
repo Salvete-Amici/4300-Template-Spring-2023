@@ -246,15 +246,19 @@ def preprocessing(ingredients, optional, restrictions, category, time):
             return json.dumps(output)
     ranked = search_rank(ingredients, optional, restrictions,
                          category, time, aii, ii, mapping, time_lookup, category_lookup)
+    # print(ml_output_dict)
     for rep in ranked:
         name = rep[0]
         d = {"title": name, "descr": mapping[name]
              ["ingredients"], "link": URL + str(mapping[name]["id"]),
              "rating": np.round(get_rating(mapping, name), 1)}
 
-        re_id = str(mapping[name]["id"])
-        if re_id in ml_output_dict.keys():
-            d['relevant_topic'] = ml_output_dict[re_id]
+        re_id = int(mapping[name]["id"])
+        # print(re_id)
+        # print(ml_output_dict.keys())
+        # if re_id in ml_output_dict.keys():
+        #     print("yes")
+        d['relevant_topic'] = ml_output_dict[re_id]
 
         output.append(d)
     if len(output) == 0:
@@ -304,4 +308,4 @@ def recipe_search():
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
 
-# app.run(debug=True)
+app.run(debug=True)
