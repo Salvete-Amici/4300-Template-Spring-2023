@@ -7,7 +7,8 @@ CREATE TABLE rep (
   minutes int DEFAULT NULL,
   tags text,
   ingredients text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO rep VALUES (190,'3,0,3,5','20 000 prize winning chili con carne',175,'weeknight,time-to-make,course,main-ingredient,preparation,occasion,main-dish,beef,pork,holiday-event,winter,chili,stove-top,dietary,seasonal,ground-beef,meat,kwanzaa,equipment,number-of-servings,4-hours-or-less','lean chuck,lean pork,onion,garlic cloves,budweiser beer,hunts tomato sauce,water,chili powder,cumin,bouillon,oregano leaves,paprika,sugar,unsweetened cocoa,coriander,louisiana hot sauce,flour,cornmeal');
 INSERT INTO rep VALUES (5060,'0','philly  waldorf salad',60,'60-minutes-or-less,time-to-make,course,cuisine,preparation,north-american,low-protein,salads,american,easy,dietary,low-sodium,low-in-something,3-steps-or-less','philadelphia cream cheese,orange juice,orange rind,sugar,apples,celery,pecans');

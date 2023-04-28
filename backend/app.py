@@ -5,7 +5,7 @@ import re
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-#import pickle
+import pickle5 as pickle
 from nltk.stem import PorterStemmer
 stemmer = PorterStemmer()
 
@@ -30,8 +30,8 @@ mysql_engine.load_file_into_db()
 app = Flask(__name__)
 CORS(app)
 
-# with open('pickled_dict.pickle', 'rb') as handle:
-#     ml_output_dict = pickle.load(handle)
+with open('pickled_dict.pickle', 'rb') as handle:
+    ml_output_dict = pickle.load(handle)
 
 
 # Sample search, the LIKE operator in this case is hard-coded,
@@ -217,7 +217,6 @@ def jaccard(ingr_list1, ingr_list2):
 
 
 def get_rating(dict, name):
-    # s = len(mapping[name]["rating"])
     avg = np.mean(dict[name]["rating"])
     return avg
 
@@ -253,34 +252,14 @@ def preprocessing(ingredients, optional, restrictions, category, time):
              ["ingredients"], "link": URL + str(mapping[name]["id"]),
              "rating": np.round(get_rating(mapping, name), 1)}
 
-        # re_id = mapping [name]["id"]
-        # if re_id in ml_output_dict:
-        #     d['relevant_topic'] = ml_output_dict[re_id]
+        re_id = str(mapping[name]["id"])
+        if re_id in ml_output_dict.keys():
+            d['relevant_topic'] = ml_output_dict[re_id]
 
         output.append(d)
     if len(output) == 0:
         output.append({"title": "No recipe found."})
     return json.dumps(output)
-
-
-# def edit_dist(query, ingredient):
-    #"Calculate the minimum edit distance between the query and an existing ingredient"
-    #n_rows = len(query) + 1
-    #n_cols = len(ingredient) + 1
-    # construct an edit distance matrix, assume instertion cost = 1,
-    # deletion cost = 1, and substitution cost = 2
-    #ins_cost = 1
-    #del_cost = 1
-    #mat = np.zeros((n_rows, n_cols))
-    #mat[0] = np.arange(n_cols)
-    #mat[:, 0] = np.arange(n_rows)
-    # for i in range(1, n_rows):
-    # for j in range(1, n_cols):
-    #sub_cost = 0 if query[i-1] == ingredient[j-1] else 2
-    # mat[i, j] = min(mat[i-1, j] + del_cost,
-    # mat[i-1, j-1] + sub_cost, mat[i, j-1] + ins_cost)
-    # return mat[len(query), len(ingredient)]
-
 
 @app.route("/")
 def home():
@@ -325,4 +304,4 @@ def recipe_search():
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
 
-# app.run(debug=True)
+app.run(debug=True)

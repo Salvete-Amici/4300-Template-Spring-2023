@@ -279,12 +279,13 @@
 
         
 
-        function answerBoxTemplate(title, titleDesc, link, rating) {
+        function answerBoxTemplate(title, titleDesc, link, rating, topic) {
            return `<div class='recipe-box'>
                 <a href=${link} id=${title}+"link" title=${title}>
                     <h3 style = 'font-family: verdana' class='recipe-title'>${title}</h3>
                 </a>
                 <p style = 'font-family: verdana' class='recipe-desc'>${"Rating:"+ rating}</p>
+                <p style = 'font-family: verdana' class='recipe-desc'>${"Topic:"+ topic}</p>
                 <p style = 'font-family: verdana' class='recipe-desc'>${"Ingredients:" + titleDesc}</p>
             </div>`
 
@@ -358,7 +359,7 @@
                 .then((data) => data.forEach(row => {
                     let tempDiv = document.createElement("div")
                     tempDiv.innerHTML = row.rating ?
-                    answerBoxTemplate(row.title, row.descr, row.link,row.rating)
+                    answerBoxTemplate(row.title, row.descr, row.link,row.rating, row.relevant_topic)
                     : noResultTemplate(row.title)
                     document.getElementById("answer-box").appendChild(tempDiv)
                 }));
