@@ -3,12 +3,14 @@ import re
 import csv
 import gensim
 from gensim import corpora
+from gensim.models.coherencemodel import CoherenceModel
 import pickle
 
 #read file
-df = pd.read_csv('interaction_subset.csv', usecols=['recipe_id','review'],quoting=csv.QUOTE_NONE)
+df = pd.read_csv('/Users/cheyenne/Desktop/4300/final_project/4300-Template-Spring-2023/backend/match.csv', usecols=['recipe_id','review'], engine='python')
 df = df.dropna(how='all')
-df['puncts_removed_review'] = df['review'].map(lambda x: re.sub(r'[^\w\s]', '', str(x))) #remove punctuations 
+df['empty_space_removed'] = df['review'].map(lambda x: " ".join(str(x).split()))
+df['puncts_removed_review'] = df['empty_space_removed'].map(lambda x: re.sub(r'[^\w\s]', '', str(x))) #remove punctuations 
 df['lowercase_review'] = df['puncts_removed_review'].map(lambda x: x.lower()) #convert to lowercase
 
 import nltk
@@ -24,7 +26,7 @@ for i in range(len(reviews)):
   reviews[i] = word_tokenize(reviews[i])
   
 #perform lemmatization
-#reference https://www.holisticseo.digital/python-seo/nltk/lemmatize
+#reference: https://www.holisticseo.digital/python-seo/nltk/lemmatize
 w_n_lemmatizer = WordNetLemmatizer()
 
 def nltk_pos(tag):
@@ -34,7 +36,7 @@ def nltk_pos(tag):
     return wordnet.VERB
   elif tag.startswith('N'):
     return wordnet.NOUN
-  elif tag.startswith('R'):
+  elif tag.startswith('R'): 
     return wordnet.ADV
   else:
     return None
@@ -51,6 +53,7 @@ def lemmatize_review(rev):
     else:        
       lemmatized_review.append(w_n_lemmatizer.lemmatize(w, tag))
   return lemmatized_review
+
 
 for i in range(len(reviews)):
   reviews[i] = lemmatize_review(reviews[i])
@@ -71,41 +74,75 @@ dict.filter_extremes(no_below=100, no_above=0.7)
 corpus = [dict.doc2bow(rev) for rev in reviews]
 #entry corresponds to tuple -- (word, # of occurences)
 
-LDA = gensim.models.ldamodel.LdaModel
 
-lda_model = LDA(corpus=corpus, id2word=dict, num_topics=2, random_state=50, chunksize=100, alpha='auto', eta='auto',passes=50,iterations=100) 
-topics = lda_model.print_topics(num_words=5)
+#find the optimal number of topics using coherence score
+#input:t_num(list of topic numbers to choose from)
+def c_score(t_num):
+  lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus, id2word=dict, num_topics=t_num, random_state=50, chunksize=100, alpha='auto', eta='auto',passes=50) 
+  coherence_model_lda = CoherenceModel(model=lda_model, texts=reviews, dictionary=dict, coherence='c_v')
+  coherence_score = coherence_model_lda.get_coherence()
+  return coherence_score
+
+
+possible_topic_nums = [2,3,4,5]
+
+def optimal_find(num_lst):
+  c_score_lst = []
+  for n in num_lst:
+    score = c_score(n)
+    c_score_lst.append(score)
+  best_topic_num = possible_topic_nums[c_score_lst.index(max(c_score_lst))]
+  return best_topic_num
+
+if __name__ == "__main__":
+  best_num = optimal_find(possible_topic_nums)
+  lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus, id2word=dict, num_topics=best_num, random_state=50, chunksize=100, alpha='auto', eta='auto',passes=50,iterations=100) 
+  topics = lda_model.print_topics(num_words=5)
+  
+
+  best_topics = ["time", "easy", "delicious"]
+
 
 #use LDA topics to assign reviews to corresponding topics
 #get_term_topics returns the probability that a word belongs to a particular topic
 #similarly, we also have get_document_topics
-def get_label(review):
-  if type(review) == str:
-    bow_format = dict.doc2bow(review.split())
-  else:
-    bow_format = review
-  topics_prob = lda_model.get_document_topics(bow_format)
-  if max(topics_prob[0][1], topics_prob[1][1]) == topics_prob[0][1]:
-    label = "simple and tasty"
-  else:
-    label = "recipes you'll use over and over again"
-  return label
+  def get_label(review):
+    if type(review) == str:
+      bow_format = dict.doc2bow(review.split())
+    else:
+      bow_format = review
+    topics_prob = lda_model.get_document_topics(bow_format)
+    if max(topics_prob[0][1], topics_prob[1][1], topics_prob[2][1]) == topics_prob[0][1]:
+      label = "People who've tried out this recipe love it so much that they're already planning on customizing it for their family cookbook!"
+    elif max(topics_prob[0][1], topics_prob[1][1], topics_prob[2][1]) == topics_prob[1][1]:
+      label = "Not much kitchen experience? Check out this super easy recipe!"
+    else:
+      label = "Simply delicious!"
+    return label
 
 #dictionary of the format {id:(# of 1st-topic reviews, # of 2nd-topic reviews)}
-review_labels = {}
-for i in range(len(corpus)):
-  label = get_label(corpus[i])
-  review_labels[ids[i]] = [0,0]
-  if label == "simple and tasty":
-    review_labels[ids[i]][0] += 1 
-  else: 
-    review_labels[ids[i]][1] += 1
+  review_labels = {}
+  for i in range(len(corpus)):
+    label = get_label(corpus[i])
+    if ids[i] not in review_labels:
+      review_labels[ids[i]] = [0,0,0]
+    if label == "People who've tried out this recipe love it so much that they're already planning on customizing it for their family cookbook!":
+      review_labels[ids[i]][0] += 1 
+    elif label == "No kitchen experience? Check out this super easy recipe!": 
+      review_labels[ids[i]][1] += 1
+    else:
+      review_labels[ids[i]][2] += 1
+      
+  #assign topics to recipes
+  for k in review_labels:
+    if max(review_labels[k][0], review_labels[k][1], review_labels[k][2]) == review_labels[k][0]:
+      review_labels[k] = "People who've tried out this recipe love it so much that they're already planning on customizing it for their family cookbook!"
+    elif max(review_labels[k][0], review_labels[k][1], review_labels[k][2]) == review_labels[k][1]:
+      review_labels[k] = "No kitchen experience? Check out this super easy recipe!"
+    else:
+      review_labels[k] = "Simply delicious!"
+  
+  print(review_labels)
 
-for k in review_labels:
-  if max(review_labels[k][0], review_labels[k][1]) == review_labels[k][0]:
-    review_labels[k] == "simple and tasty"
-  else:
-    review_labels[k] == "recipes you'll use over and over again"
-
-with open('pickled_dict.pickle', 'wb') as handle:
+  with open('pickled_dict.pickle', 'wb') as handle:
     pickle.dump(review_labels, handle, protocol=pickle.HIGHEST_PROTOCOL)
