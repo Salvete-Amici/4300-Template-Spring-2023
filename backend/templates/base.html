@@ -6,7 +6,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet"> -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"> -->
+<link rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <body>
     
@@ -21,7 +23,7 @@
             <div class="logo">
                 <img src="/static/images/pantry-pal-logo.png">
             </div>
-            <label for="input-ingredients">Ingredients:</label>
+            <label for="input-ingredients"><strong>Ingredients:</strong></label>
             <input type="text" id="input-ingredients" name="input-ingredients" placeholder="Enter Ingredient">
             <button type="button" id="add">Add</button>
             
@@ -37,39 +39,71 @@
         </form>
         <form id="form2" onsubmit="return false">
 
-            <label for="mandatory">Choose Mandatory Ingredients:<br></label>
+            <label for="mandatory"><strong>Choose Mandatory Ingredients:</strong><br></label>
             <div class="mandatory" id="mandatory">
                 <ul class="mandatory-list" id="mandatory-list"></ul>
             </div>
             
 
-            <label for="restrictions">Dietary Restrictions:</label>
+            <label for="restrictions"><strong>Dietary Restrictions:</strong></label>
             <div class="restrictions">
+                <ul class="restrictions-list" id="restrictions-list">
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions" value="vegetarian"/>
+                        <label for="dietary-restrictions1">Vegetarian</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions" value="vegan"/>
+                        <label for="dietary-restrictions2">Vegan</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions" value="dairy-free"/>
+                        <label for="dietary-restrictions3">Dairy-free</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions" value="gluten-free"/>
+                        <label for="dietary-restrictions4">Gluten-free</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions" value="nut-free"/>
+                        <label for="dietary-restrictions5">Nut-free</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions" value="egg-free"/>
+                        <label for="dietary-restrictions6">Egg-free</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions" value="shellfish-free"/>
+                        <label for="dietary-restrictions7">Shellfish-free</label>
+                    </li>
+                        
+                        
+                        
+                        
+                        
+                </ul>
                 
-                <input type="checkbox" id="dietary-restrictions1" name="dietary-restrictions" value="vegetarian"/>
-                <label for="dietary-restrictions1">Vegetarian</label><br>
-                <input type="checkbox" id="dietary-restrictions2" name="dietary-restrictions" value="vegan"/>
-                <label for="dietary-restrictions2">Vegan</label><br>
-                <input type="checkbox" id="dietary-restrictions3" name="dietary-restrictions" value="dairy-free"/>
-                <label for="dietary-restrictions3">Dairy Free</label><br>
-                <input type="checkbox" id="dietary-restrictions4" name="dietary-restrictions" value="gluten-free"/>
-                <label for="dietary-restrictions4">Gluten Free</label><br>
-                <input type="checkbox" id="dietary-restrictions5" name="dietary-restrictions" value="nut-free"/>
-                <label for="dietary-restrictions5">Nut Free</label><br>
-                <input type="checkbox" id="dietary-restrictions6" name="dietary-restrictions" value="egg-free"/>
-                <label for="dietary-restrictions6">Egg Free</label><br>
-                <input type="checkbox" id="dietary-restrictions7" name="dietary-restrictions" value="shellfish-free"/>
-                <label for="dietary-restrictions7">Shellfish Free</label><br>
+                
             </div>
-            
-            <label for="category">Category:</label>
+            <!-- <label for="category"><strong>Category: </strong></label>
+            <ul class="select" name="category">
+                <input class="select_close" type="radio" name="categoryType" value="Select" checked="checked" id="category-select">
+                <label for="category-select">Select One</label>
+                <input type="radio" name="categoryType" value="Main" id="category-main">
+                <label for="category-main">Main Course</label>
+                <input type="radio" name="categoryType" value="Dessert" id="category-dessert">
+                <label for="category-dessert">Dessert</label>
+                <input type="radio" name="categoryType" value="Appetizer-Snacks" id="category-appetizer-snacks">
+                <label for="category-appetizer-snacks">Appetizer and Snack</label>
+            </ul> -->
+            <label for="category"><strong>Category:</strong></label>
             <select name="category" id="category">
                 <option value="select-category">Select One</option>
                 <option value="main-course">Main Course</option>
                 <option value="dessert">Dessert</option>
                 <option value="appetizer-snacks">Appetizer and Snack</option>
-            </select><br>
-            <label for="time">Time:</label>
+            </select><br><br>
+            <label for="time"><strong>Time:</strong></label>
             <select name="time" id="time">
                 <option value="select-time">Select One</option>
                 <option value="15min">Under 15 minutes</option>
