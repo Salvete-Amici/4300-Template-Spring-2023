@@ -134,14 +134,15 @@
                 });
                 let delIng = ingredients.splice(index, 1)
                 delIngredients.push(delIng[0]);
-                console.log(delIngredients);
-                console.log(ingredients);
+                // console.log(delIngredients);
+                // console.log(ingredients);
                 tgt.closest("li").remove();
 
             }
                     
             
         });
+
 
         addIng.addEventListener("click", add);
         addInput.addEventListener("keypress", function(event) {
@@ -153,6 +154,8 @@
 
             }
         });
+
+
         function add() {
             var ingredient = document.getElementById("input-ingredients").value;
             ingredients.push(ingredient);
@@ -232,10 +235,25 @@
                     var e = document.getElementById(delIngredients[0] + "-checkbox")
                     var cont = document.querySelector(".mandatory-list");
                     e.parentElement.remove();
+                    if (optional.includes(delIngredients[0])) {
+                        let index = optional.findIndex(function(x) {
+                            return x == delIngredients[0];
+                        });
+                        optional.splice(index, 1);
+                    }
+                    else {
+                        let index = mandatory.findIndex(function(x) {
+                            return x == delIngredients[0];
+                        });
+                        mandatory.splice(index, 1);
+                    }
                 }
                 delIngredients.pop();
             }
-            // console.log(ingredients);
+            console.log("deleted: ", delIngredients);
+            console.log("optional: ", optional);
+            console.log("mandatory: ", mandatory);
+
         }
         back.onclick = function() {
             form1.style.left = "40px";
