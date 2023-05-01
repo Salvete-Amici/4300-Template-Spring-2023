@@ -257,7 +257,6 @@ def preprocessing(ingredients, optional, restrictions, category, time):
         # print(type(re_id))
         # print(list(ml_output_dict.keys())[0])
         if str(re_id) in ml_output_dict.keys():
-        #     print("yes")
             d['relevant_topic'] = ml_output_dict[re_id]
         else:
             d['relevant_topic'] = ""
@@ -310,4 +309,4 @@ def recipe_search():
     return preprocessing(no_dupe_ingr, no_dupe_optional, restrict, category, time)
 
 
-app.run(debug=True)
+# app.run(debug=True)
