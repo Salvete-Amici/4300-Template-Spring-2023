@@ -253,12 +253,14 @@ def preprocessing(ingredients, optional, restrictions, category, time):
              ["ingredients"], "link": URL + str(mapping[name]["id"]),
              "rating": np.round(get_rating(mapping, name), 1)}
 
-        re_id = int(mapping[name]["id"])
-        # print(re_id)
-        # print(ml_output_dict.keys())
-        # if re_id in ml_output_dict.keys():
+        re_id = str(mapping[name]["id"])
+        # print(type(re_id))
+        # print(list(ml_output_dict.keys())[0])
+        if str(re_id) in ml_output_dict.keys():
         #     print("yes")
-        d['relevant_topic'] = ml_output_dict[re_id]
+            d['relevant_topic'] = ml_output_dict[re_id]
+        else:
+            d['relevant_topic'] = ""
 
         output.append(d)
     if len(output) == 0:
