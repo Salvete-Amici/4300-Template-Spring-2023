@@ -307,10 +307,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
             while (optional.length) { optional.pop() }
             document.getElementById("mandatory-list").innerHTML = "";
             document.getElementById("ingredient-container").innerHTML = "";
+            document.getElementById("answer-box").innerHTML = "";
+
         }
         reset2.addEventListener("click", clear2);
         function clear2() {
+            console.log("reset2")
             progress.style.width = "666px"
+            document.getElementById("answer-box").innerHTML = "";
             // while (ingredients.length) { ingredients.pop() }
             // document.getElementById("ing-output").innerHTML = "";
         }
