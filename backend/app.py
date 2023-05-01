@@ -68,7 +68,7 @@ allergies = {"nuts": ["peanut", "peanut oil", "hazelnut",
 allergies["vegan"] = allergies["vegetarian"] + \
     allergies["dairy"] + allergies["egg"]
 
-time_lookup = {"Under 15 minutes" : 15, "Under 30 minutes": 30, "Under 1 hour": 60, "1-2 hours" : 120, "2+ hours" : 10000}
+time_lookup = {"Under 15 minutes" : [0,15], "Under 30 minutes": [0,30], "Under 1 hour": [0,60], "1-2 hours" : [60,120], "2+ hours" : [120,10000]}
 
 category_lookup = {"Main Course" : ["main-dish", "soups-stews", "sandwiches", "breakfast"], "Appetizer and Snack" : ["appetizers", "side-dishes", "salads", "sauces", "condiments-etc"], "Dessert" : ["desserts"]}
 
@@ -105,7 +105,9 @@ def search_rank(query, optional, allergens, category, time, allergy_inverted_ind
         if time == "":
             time_postings = category_postings
             break
-        if time_lookup[time] >= recipe_dict[posting]['minutes']:
+        time1 = time_lookup[time][0]
+        time2 = time_lookup[time][1]
+        if time1 <= recipe_dict[posting]['minutes'] and time2 >= recipe_dict[posting]['minutes']:
             time_postings.append(posting)
 
     similarity_ranking = []
@@ -228,7 +230,7 @@ def preprocessing(ingredients, optional, restrictions, category, time):
     global time_lookup
     global category_lookup
     if mapping is None:
-        query_sql = f"""SELECT * FROM rep"""
+        query_sql = f"""SELECT * FROM rep limit 1000"""
         keys = ["id", "rating", "name", "minutes", "tags", "ingredients"]
         data = mysql_engine.query_selector(query_sql)
         zipping = [dict(zip(keys, i)) for i in data]
