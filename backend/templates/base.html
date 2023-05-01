@@ -211,7 +211,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
             
             container.appendChild(li);
 
-            console.log(ingredients);
+            console.log("ingredients: ", ingredients);
             
         
 
@@ -283,6 +283,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
                     }
                 }
                 delIngredients.pop();
+            }
+            while (mandatory.length) {
+                mandatory.pop();
             }
             console.log("deleted: ", delIngredients);
             console.log("optional: ", optional);
