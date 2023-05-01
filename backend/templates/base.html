@@ -330,15 +330,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         }
 
         
-
+ // <h4 style = 'font-family: verdana' class='recipe-desc'>${"Rating: "+ rating}</h4>
+//  <p class='star-ratings'>${'<span></span>'.repeat(rating)}</p>
+//                 <p><span class="star">${rating}</span></p>
         function answerBoxTemplate(title, titleDesc, link, rating, topic) {
            return `<div class='recipe-box'>
-                <a href=${link} id=${title}+"link" title=${title}>
-                    <h3 style = 'font-family: verdana' class='recipe-title'>${title}</h3>
-                </a>
-                <p style = 'font-family: verdana' class='recipe-desc'>${"Rating:"+ rating}</p>
-                <p style = 'font-family: verdana' class='recipe-desc'>${"Topic:"+ topic}</p>
-                <p style = 'font-family: verdana' class='recipe-desc'>${"Ingredients:" + titleDesc}</p>
+                <h3 style = 'font-family: verdana' class='recipe-title'>${title}
+                    <a href=${link}><i class="fa-solid fa-link"></i></a>
+                </h3>
+                <div class="star-ratings-sprite">
+                    <span style="width:${rating*100/5}%" class="star-ratings-sprite-rating"></span>
+                </div>
+                <p style = 'font-family: verdana' class='recipe-desc'>${"Topic: "+ topic}</p>
+                <p style = 'font-family: verdana' class='recipe-desc'>${"Ingredients: " + titleDesc}</p>
             </div>`
 
         }

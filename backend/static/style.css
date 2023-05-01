@@ -90,6 +90,7 @@ form .restrictions input {
     position: relative;
     top: -1px;
 }
+
 /* form .restrictions label {
     padding-left: 15px;
 
@@ -195,12 +196,38 @@ form .restrictions input {
 .recipe-title {
     font-family: 'Kanit', sans-serif;
     padding-bottom: 10px;
-    font-size: 24px;
+    font-size: 30px;
     text-transform: uppercase;
+}
+
+/*code from https://gist.github.com/morozVA/3ad97742c19f96fd5760864ace0c1ff5*/
+.star-ratings-sprite {
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+    /* font-size: 0; */
+    height: 21px;
+    /* line-height: 0; */
+    overflow: hidden;
+    /* text-indent: -999em; */
+    width: 110px;
+    /* margin: 0 auto; */
+    padding-bottom: 7px;
+
+}
+
+.star-ratings-sprite-rating {
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+    background-position: 0 100%;
+    float: left;
+    height: 21px;
+    display: block;
 }
 
 .recipe-desc {
     font-family: 'Montserrat', sans-serif;
+    /* padding: 8px; */
+    padding-bottom: 10px;
+    font-size: 20;
+
 }
 
 .ingredient-list {
@@ -291,17 +318,20 @@ ul.ingredient-container li label {
 
 }
 
-ul.mandatory-list, ul.restrictions-list {
+ul.mandatory-list,
+ul.restrictions-list {
     list-style: none;
     padding: 20px;
 }
 
-ul.mandatory-list li, ul.restrictions-list li {
+ul.mandatory-list li,
+ul.restrictions-list li {
     display: inline;
     margin-right: 10px;
 }
 
-ul.mandatory-list li label, ul.restrictions-list li label {
+ul.mandatory-list li label,
+ul.restrictions-list li label {
     display: inline-block;
     background-color: rgba(255, 255, 255, .9);
     border: 2px solid #12bbd4;
@@ -318,7 +348,8 @@ ul.mandatory-list li label, ul.restrictions-list li label {
     transition: all .2s;
 }
 
-ul.mandatory-list li label, ul.restrictions-list li label {
+ul.mandatory-list li label,
+ul.restrictions-list li label {
     padding: 8px 12px;
     cursor: pointer;
 }
@@ -336,6 +367,7 @@ ul.mandatory-list li label::before {
     content: "\f067";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions1]::before {
     display: inline-block;
     font-style: normal;
@@ -349,6 +381,7 @@ ul.restrictions-list li label[for=dietary-restrictions1]::before {
     content: "\f06c";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions2]::before {
     display: inline-block;
     font-style: normal;
@@ -362,6 +395,7 @@ ul.restrictions-list li label[for=dietary-restrictions2]::before {
     content: "\f4d8";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions3]::before {
     display: inline-block;
     font-style: normal;
@@ -375,6 +409,7 @@ ul.restrictions-list li label[for=dietary-restrictions3]::before {
     content: "\f6c8";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions4]::before {
     display: inline-block;
     font-style: normal;
@@ -388,6 +423,7 @@ ul.restrictions-list li label[for=dietary-restrictions4]::before {
     content: "\e2cd";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions5]::before {
     display: inline-block;
     font-style: normal;
@@ -401,6 +437,7 @@ ul.restrictions-list li label[for=dietary-restrictions5]::before {
     content: "\4e";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions6]::before {
     display: inline-block;
     font-style: normal;
@@ -414,6 +451,7 @@ ul.restrictions-list li label[for=dietary-restrictions6]::before {
     content: "\f7fb";
     transition: transform .3s ease-in-out;
 }
+
 ul.restrictions-list li label[for=dietary-restrictions7]::before {
     display: inline-block;
     font-style: normal;
@@ -428,24 +466,28 @@ ul.restrictions-list li label[for=dietary-restrictions7]::before {
     transition: transform .3s ease-in-out;
 }
 
-ul.mandatory-list li input[type="checkbox"]:checked+label::before, ul.restrictions-list li input[type="checkbox"]:checked+label::before {
+ul.mandatory-list li input[type="checkbox"]:checked+label::before,
+ul.restrictions-list li input[type="checkbox"]:checked+label::before {
     content: "\f00c";
     transform: rotate(-360deg);
     transition: transform .3s ease-in-out;
 }
 
-ul.mandatory-list li input[type="checkbox"]:checked+label, ul.restrictions-list li input[type="checkbox"]:checked+label {
+ul.mandatory-list li input[type="checkbox"]:checked+label,
+ul.restrictions-list li input[type="checkbox"]:checked+label {
     border: 2px solid #1bdbf8;
     background-color: #12bbd4;
     color: #fff;
     transition: all .2s;
 }
 
-ul.mandatory-list li input[type="checkbox"], ul.restrictions-list li input[type="checkbox"] {
+ul.mandatory-list li input[type="checkbox"],
+ul.restrictions-list li input[type="checkbox"] {
     display: absolute;
 }
 
-ul.mandatory-list li input[type="checkbox"], ul.restrictions-list li input[type="checkbox"] {
+ul.mandatory-list li input[type="checkbox"],
+ul.restrictions-list li input[type="checkbox"] {
     position: absolute;
     opacity: 0;
 }
